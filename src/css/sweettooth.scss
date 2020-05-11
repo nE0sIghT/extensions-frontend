@@ -1,0 +1,22 @@
+@import './gnome/css/style.css';
+
+/* Unreviewed Extension Counter */
+/* ==================================================================== */
+
+div.nav.navbar-nav a.unreviewed_counter,
+div.navbar-header a.unreviewed_counter {
+    background-color: #3968A1;
+    color: #ffffff;
+    font-weight: 700;
+    text-decoration: none;
+    padding: 0 5px;
+    border-radius: 4px;
+    margin-top: 13px;
+    margin-right: 10px;
+    border: 1px solid #195EB1;
+}
+
+div.nav.navbar-nav a.unreviewed_counter:hover,
+div.navbar-header a.unreviewed_counter:hover {
+    background-color: #195EB1;
+}
