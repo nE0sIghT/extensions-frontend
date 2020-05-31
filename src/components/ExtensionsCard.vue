@@ -1,8 +1,7 @@
 <template>
     <b-row class='extensions-card'>
       <b-col>
-        <b-card>
-          <div class='d-flex align-items-center card-title '>
+          <div class='d-flex align-items-center extension-card-title'>
             <div class='flex-grow-1'>
               <h5 class='mb-0'>{{ title }}</h5>
             </div>
@@ -35,7 +34,6 @@
                 </b-card>
             </b-col>
           </b-row>
-        </b-card>
       </b-col>
     </b-row>
 </template>
@@ -50,8 +48,16 @@ export default {
 };
 </script>
 
-<style scoped>
+<style lang='scss' scoped>
+  .extensions-card {
+    .extension-card-title {
+      padding: 2rem 0 1rem 0;
+      margin-top: 2rem;
+      border-top: 1px solid #dfdfdf;
+    }
+
     .extensions-row .card {
         height: 100%;
     }
+  }
 </style>
