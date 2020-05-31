@@ -8,7 +8,7 @@ export default (() => [
     {
       path: '/local',
       name: 'Installed',
-      component: () => import('../views/About.vue'),
+      component: () => import('../views/Installed.vue'),
       showInMenu: true,
     },
     {
