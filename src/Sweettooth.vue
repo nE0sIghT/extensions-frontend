@@ -3,7 +3,7 @@
     <header class="gnome-header">
         <b-navbar class='p-0' toggleable="md" type="dark" fixed="top">
             <b-container fluid='md'>
-                <b-navbar-brand href="/" title="$t('GNOME Shell Extensions')" class="gnome-navbar-brand mr-auto"><img src="images/gnome-extensions.svg" alt="$t('GNOME Shell Extensions')" /></b-navbar-brand>
+                <b-navbar-brand to="/" title="$t('GNOME Shell Extensions')" class="gnome-navbar-brand mr-auto"><img src="images/gnome-extensions.svg" alt="$t('GNOME Shell Extensions')" /></b-navbar-brand>
 
                 <b-navbar-toggle target="search-wrapper">
                     <template v-slot:default>
