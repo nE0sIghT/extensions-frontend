@@ -7,7 +7,7 @@
     </b-row>
 
     <extensions-card
-      :title="$t('New')"
+      :title="$t('New extensions')"
       to="/search/?new"
       :extensions="recent.results"
       #default="{ extension }">
@@ -15,7 +15,7 @@
     </extensions-card>
 
     <extensions-card
-      :title="$t('Updated')"
+      :title="$t('Last updated')"
       to="/search/?updated"
       :extensions="updated.results"
       #default="{ extension }">
@@ -23,7 +23,7 @@
     </extensions-card>
 
     <extensions-card
-      :title="$t('Popular')"
+      :title="$t('Popular extensions')"
       to="/search/?popular"
       :extensions="popular.results"
       #default="{ extension }">
