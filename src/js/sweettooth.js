@@ -48,7 +48,7 @@ export default {
     async mounted() {
         this.api = await http;
         // TODO: catch errors when we got notifications
-        let hello = (await this.api.get('/hello')).data;
+        let { data: hello } = await this.api.hello();
         this.user = hello.user;
         this.backend_forms = hello.forms;
     }

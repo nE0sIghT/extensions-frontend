@@ -1,16 +1,28 @@
 import axios from 'axios'
 import qs from "qs"
 
-const http = (function () {
-    const EGO_URL = 'http://localhost:8000/api/v1';
+export default (function () {
+  const EGO_URL = 'http://localhost:8000/api/v1';
+  const defaultRequestParameters = {
+    paramsSerializer: (params) => qs.stringify(params, { arrayFormat: "brackets" })
+  }
 
-    axios.defaults.paramsSerializer = function(params) {
-      return qs.stringify(params, { arrayFormat: "brackets" });
-    };
+  const client = axios.create({
+    baseURL: EGO_URL
+  });
 
-    return Promise.resolve(axios.create({
-        baseURL: EGO_URL
-    }));
+  function getRequest(url, config) {
+    return client.get(url, Object.assign({}, defaultRequestParameters, config));
+  }
+
+  return Promise.resolve({
+    extensions(config) {
+      return getRequest('/extensions', config);
+    },
+
+    hello() {
+      return getRequest('/hello');
+    },
+
+  });
 })();
-
-export default http;

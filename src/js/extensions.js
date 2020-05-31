@@ -8,6 +8,7 @@ const INITIAL_PAGE_SIZE = 4;
 export default {
     data() {
         return {
+            api: {},
             updated: {},
             popular: {},
             recent: {},
@@ -23,7 +24,7 @@ export default {
 
     methods: {
         getActiveExtensions(query) {
-            return this.api.get('/extensions', { params: 
+            return this.api.server.extensions({ params:
                 Object.assign({
                     status: constants.STATUS.ACTIVE,
                     page_size: INITIAL_PAGE_SIZE,
@@ -63,7 +64,7 @@ export default {
     },
 
     async mounted() {
-        this.api = await http;
+        this.api.server = await http;
 
         [
             {data: this.updated},
@@ -76,6 +77,5 @@ export default {
             this.getNewExtensions(),
             this.getRecommendedExtensions(),
         ]);
-        console.log(this.recommended);
     }
 };
