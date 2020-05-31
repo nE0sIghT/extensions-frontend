@@ -1,8 +1,11 @@
 <template>
   <b-carousel class="extensions-carousel" controls indicators>
-    <b-carousel-slide
+    <b-link
       v-for="extension in extensions"
       :key="extension.id"
+      :to="`/extension/${extension.uuid}`"
+    >
+    <b-carousel-slide
       :caption="getCaption(extension)"
       :text="getText(extension)"
     >
@@ -27,6 +30,7 @@
         </div>
       </template>
     </b-carousel-slide>
+    </b-link>
   </b-carousel>
 </template>
 
