@@ -76,6 +76,8 @@
 
     .carousel-caption {
       max-width: $extensions_carousel_large_width;
+      padding: 0 1rem;
+      margin: 0 auto;
 
       > h3{
         color: #fff;
