@@ -1,11 +1,11 @@
-/** @type {import('axios')} */
-import http from './http'
+import serverMixin from './mixins/server'
 import routes from '../router/navigation'
 
 export default {
+    mixins: [serverMixin],
+
     data() {
         return {
-            api: null,
             backend_forms: {
 
             },
@@ -46,9 +46,8 @@ export default {
     },
 
     async mounted() {
-        this.api = await http;
         // TODO: catch errors when we got notifications
-        let { data: hello } = await this.api.hello();
+        let { data: hello } = await this.api.server.hello();
         this.user = hello.user;
         this.backend_forms = hello.forms;
     }

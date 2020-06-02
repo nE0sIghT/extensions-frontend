@@ -1,5 +1,5 @@
 import constants from './constants'
-import http from './http'
+import http from './api/server'
 import ExtensionsCard from '../components/ExtensionsCard'
 import ExtensionsCarousel from '../components/ExtensionsCarousel'
 
