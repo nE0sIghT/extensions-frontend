@@ -56,6 +56,7 @@
                         icon="gear"
                         :class="getPreferencesIconClasses(extension)"
                         @click="openPreferences(extension)"
+                        v-b-popover.hover.top="$t('Settings')"
                         aria-hidden="true"
                     ></b-icon>
                     <div
