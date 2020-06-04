@@ -79,6 +79,11 @@ export default {
         },
 
         async uninstallExtension(extension) {
+            if(this.isSystem(extension))
+            {
+                return;
+            }
+
             let api = await this.api.browser;
             return api.uninstallExtension(extension.uuid);
         },

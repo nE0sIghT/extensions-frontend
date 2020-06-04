@@ -20,6 +20,13 @@
                 </h3>
                 <div class='status-icons'>
                     <b-icon
+                        v-if="isSystem(extension)"
+                        v-b-popover.hover="$t('This extension is installed systemwide')"
+                        icon="lock-fill"
+                        :class="getIconClasses('bg-primary')"
+                        aria-hidden="true"
+                    ></b-icon>
+                    <b-icon
                         v-if="extension.hasUpdate"
                         v-b-popover.hover="$t('Update will be applied on next Shell restart')"
                         icon="cloud-download"
@@ -51,12 +58,17 @@
                         @click="openPreferences(extension)"
                         aria-hidden="true"
                     ></b-icon>
-                    <b-icon
-                        icon="x"
-                        :class="getDeleteIconClasses(extension)"
-                        @click="uninstallExtension(extension)"
-                        aria-hidden="true"
-                    ></b-icon>
+                    <div
+                        class='icon-wrapper'
+                        v-b-popover.hover.top="getUninstallPopover(extension)"
+                    >
+                        <b-icon
+                            icon="x"
+                            :class="getDeleteIconClasses(extension)"
+                            @click="uninstallExtension(extension)"
+                            aria-hidden="true"
+                        ></b-icon>
+                    </div>
                 </div>
             </div>
             <p class='author'><span v-if="extension.creator">By <b-link :to="`/user/${extension.creator.username}`">{{ extension.creator.username }}</b-link></span></p>
@@ -118,6 +130,12 @@ export default {
 
         getToggleVariant(extension) {
             return this.isEnabled(extension) && 'success' || 'secondary';
+        },
+
+        getUninstallPopover(extension) {
+            return this.isSystem(extension) 
+                && this.$t('Systemwide extensions can not be uninstalled here')
+                || this.$t('Uninstall');
         },
 
         isServerUpdateAvailable(extension) {
@@ -201,14 +219,15 @@ export default {
                     margin: 0 $control_padding;
                 }
 
-                .b-icon {
-                    width: 32px;
-                    height: 32px;
-                    padding: 7px;
-                    color: #fff;
+                .icon-wrapper, .b-icon {
+                    width: $icon_width;
+                    height: $icon_width;
                     cursor: pointer;
                 }
 
+                .b-icon {
+                    padding: 7px;
+                }
 
                 .b-icon:hover {
                     filter: brightness(125%);
