@@ -147,6 +147,10 @@ export default {
         color: #fff;
     }
 
+    .b-icon:hover {
+        filter: brightness(125%);
+    }
+
     .extensions-list {
         .extensions-list-header {
             display: flex;
@@ -193,12 +197,9 @@ export default {
                     cursor: pointer;
                 }
 
-                .b-icon.bg-info:hover {
-                    background-color: #2bc !important;
-                }
 
-                .b-icon.bg-danger:hover {
-                    background-color: #f00 !important;
+                .b-icon:hover {
+                    filter: brightness(125%);
                 }
 
                 .b-icon.disabled {
