@@ -226,7 +226,7 @@ export default {
         }
 
         div > p {
-            margin-left: 40px;
+            margin-left: 38px;
         }
 
         p.author {
