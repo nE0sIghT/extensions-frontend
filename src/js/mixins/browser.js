@@ -27,6 +27,10 @@ export default {
             return extension.type == constants.ExtensionType.SYSTEM;
         },
 
+        haveError(extension) {
+            return extension.state == constants.ExtensionState.ERROR;
+        },
+
         async installExtension(extension) {
             let api = await this.api.browser;
             let update = extension.state && extension.state != constants.ExtensionState.UNINSTALLED;

@@ -26,6 +26,14 @@
                         :class="getIconClasses('bg-success')"
                         aria-hidden="true"
                     ></b-icon>
+                    <b-icon
+                        v-if="haveError(extension)"
+                        v-b-popover.hover="`${$t('Extension error occured:')} ${extension.error}`"
+                        icon="exclamation"
+                        class="extension-error"
+                        :class="getIconClasses('bg-danger')"
+                        aria-hidden="true"
+                    ></b-icon>
                 </div>
                 <div class='controls'>
                     <extension-toggle :checked="isEnabled(extension)" @click="toggle(extension)"></extension-toggle>
@@ -176,6 +184,10 @@ export default {
                     height: 20px;
                     padding: 0 4px;
                     margin: 0 $control_padding;
+                }
+
+                .extension-error {
+                    padding: 0;
                 }
             }
 
