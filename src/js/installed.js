@@ -52,7 +52,7 @@ export default {
         },
     },
 
-    async created() {
+    created() {
         return this.api.browser.then(api => {
             return api.listExtensions().then(installed => {
                 this.extensions.installed = installed;
