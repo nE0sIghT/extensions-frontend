@@ -16,12 +16,12 @@ function getRequest(url, config) {
 
 export default (function () {
   return {
-    extensions(config) {
-      return getRequest('/extensions', config);
+    hello() {
+        return getRequest('/hello');
     },
 
-    hello() {
-      return getRequest('/hello');
+    extensions(config) {
+        return getRequest('/extensions', config);
     },
   };
 })();
