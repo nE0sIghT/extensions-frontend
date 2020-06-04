@@ -18,8 +18,25 @@
                         <img :src='getExtensionIcon(extension)' :alt='extension.name' />{{ extension.name }}
                     </b-link>
                 </h3>
+                <div class='status-icons'>
+                    <b-icon
+                        v-if="extension.hasUpdate"
+                        v-b-popover.hover="$t('Update will be applied on next Shell restart')"
+                        icon="cloud-download"
+                        :class="getIconClasses('bg-success')"
+                        aria-hidden="true"
+                    ></b-icon>
+                </div>
                 <div class='controls'>
                     <extension-toggle :checked="isEnabled(extension)" @click="toggle(extension)"></extension-toggle>
+                    <b-icon
+                        v-if="isServerUpdateAvailable(extension)"
+                        icon="cloud-download"
+                        :class="getIconClasses('bg-success')"
+                        @click="installExtension(extension)"
+                        v-b-popover.hover.top="$t('Update')"
+                        aria-hidden="true"
+                    ></b-icon>
                     <b-icon
                         icon="gear"
                         :class="getPreferencesIconClasses(extension)"
@@ -29,7 +46,7 @@
                     <b-icon
                         icon="x"
                         :class="getDeleteIconClasses(extension)"
-                        @click="deleteExtension(extension)"
+                        @click="uninstallExtension(extension)"
                         aria-hidden="true"
                     ></b-icon>
                 </div>
@@ -69,18 +86,22 @@ export default {
     },
 
     methods: {
+        getIconClasses(backgroundClass, extraClasses) {
+            return Object.assign(
+                {},
+                defaultIconClasses, {
+                    [backgroundClass]: true,
+                },
+                extraClasses
+            );
+        },
+
         getPreferencesIconClasses(extension) {
-            return Object.assign({}, defaultIconClasses, {
-                'bg-info': true,
-                'disabled': !extension.hasPrefs,
-            });
+            return this.getIconClasses('bg-info', { 'disabled': !extension.hasPrefs });
         },
 
         getDeleteIconClasses(extension) {
-            return Object.assign({}, defaultIconClasses, {
-                'bg-danger': true,
-                'disabled': this.isSystem(extension),
-            });
+            return this.getIconClasses('bg-danger', { 'disabled': this.isSystem(extension) });
         },
 
         getToggleIcon(extension) {
@@ -89,6 +110,13 @@ export default {
 
         getToggleVariant(extension) {
             return this.isEnabled(extension) && 'success' || 'secondary';
+        },
+
+        isServerUpdateAvailable(extension) {
+            return !extension.hasUpdate
+                    && extension.update
+                    && extension.update.action == 'change'
+                    && extension.version != extension.update.version;
         },
 
         async toggle(extension) {
@@ -106,11 +134,19 @@ export default {
                     extension.busy = false;
                 });
         },
-    }
+    },
 }
 </script>
 
 <style lang='scss' scoped>
+    $extension-toggle-width: 54px;
+    $icon_width: 32px;
+    $control_padding: 2px;
+
+    .b-icon {
+        color: #fff;
+    }
+
     .extensions-list {
         .extensions-list-header {
             display: flex;
@@ -128,14 +164,25 @@ export default {
                 vertical-align: bottom;
             }
 
+            .status-icons {
+                margin-left: 5px;
+
+                .b-icon {
+                    width: 20px;
+                    height: 20px;
+                    padding: 0 4px;
+                    margin: 0 $control_padding;
+                }
+            }
 
             .controls {
                 display: flex;
                 align-items: center;
                 margin-left: auto;
+                min-width: $extension-toggle-width + ($icon_width * 3) + ($control_padding * 4 * 2);
 
                 > * {
-                    margin: 0 2px;
+                    margin: 0 $control_padding;
                 }
 
                 .b-icon {
@@ -153,7 +200,7 @@ export default {
                 .b-icon.bg-danger:hover {
                     background-color: #f00 !important;
                 }
-                
+
                 .b-icon.disabled {
                     cursor: not-allowed;
                     opacity: 0.5;

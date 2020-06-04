@@ -34,15 +34,22 @@ export default {
             {
                 if(this.extensions.installed[uuid])
                 {
-                    this.$delete(this.extensions.installed, uuid);
+                    if(this.extensions.installed[uuid].inUpdate)
+                    {
+                        this.extensions.installed[uuid].state = state;
+                    }
+                    else
+                    {
+                        this.$delete(this.extensions.installed, uuid);
+                    }
                 }
                 return;
             }
 
             if(!this.extensions.installed[uuid]) {
                 return this.api.browser.then(api => {
-                        this.extensions.installed[uuid] = extension;
                     return api.getExtensionInfo(uuid).then(extension => {
+                        this.$set(this.extensions.installed, uuid, extension);
                         return this.onExtensionStateChange(uuid, state);
                     });
                 });
@@ -62,9 +69,24 @@ export default {
                         uuid: Object.keys(this.extensions.installed)
                     }
                 }).then(({ data: { results } }) => {
+                    let request = {};
                     results.forEach(extension => {
                         this.extensions.installed[extension.uuid] = Object.assign({}, this.extensions.installed[extension.uuid], extension);
+
+                        if(!this.extensions.installed[extension.uuid].hasUpdate)
+                        {
+                            request[extension.uuid] = this.extensions.installed[extension.uuid].version;
+                        }
                     });
+
+                    if(!this.disableUpdates)
+                    {
+                        return this.api.server.updates(request, api.shellVersion, api.versionValidationEnabled).then(({ data: results }) => {
+                            for (let [uuid, update] of Object.entries(results)) {
+                                this.$set(this.extensions.installed[uuid], 'update', update);
+                            }
+                        });
+                    }
                 });
             });
         });

@@ -23,5 +23,13 @@ export default (function () {
     extensions(config) {
         return getRequest('/extensions', config);
     },
+
+    updates(extensions, shellVersion, versionValidationEnabled) {
+        return client.post('/extensions/updates', {
+            installed: extensions,
+            shell_version: shellVersion,
+            version_validation_enabled: versionValidationEnabled,
+        });
+    },
   };
 })();
