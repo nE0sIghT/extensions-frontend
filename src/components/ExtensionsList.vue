@@ -18,7 +18,6 @@
                         <img :src='getExtensionIcon(extension)' :alt='extension.name' />{{ extension.name }}
                     </b-link>
                 </h3>
-                <span class='author' v-if="extension.creator">by <b-link :to="`/user/${extension.creator.username}`">{{ extension.creator.username }}</b-link></span>
                 <div class='controls'>
                     <extension-toggle :checked="isEnabled(extension)" @click="toggle(extension)"></extension-toggle>
                     <b-icon
@@ -35,6 +34,7 @@
                     ></b-icon>
                 </div>
             </div>
+            <p class='author'><span v-if="extension.creator">By <b-link :to="`/user/${extension.creator.username}`">{{ extension.creator.username }}</b-link></span></p>
             <p>{{ extension.description }}</p>
             </b-overlay>
         </div>
@@ -128,9 +128,6 @@ export default {
                 vertical-align: bottom;
             }
 
-            .author {
-                padding-left: 0.5ch;
-            }
 
             .controls {
                 display: flex;
@@ -183,6 +180,10 @@ export default {
 
         div > p {
             margin-left: 40px;
+        }
+
+        p.author {
+            margin-bottom: 5px;
         }
     }
 </style>
