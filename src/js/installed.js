@@ -41,8 +41,8 @@ export default {
 
             if(!this.extensions.installed[uuid]) {
                 return this.api.browser.then(api => {
-                    return api.getExtensionInfo({ uuid: uuid }).then(extension => {
                         this.extensions.installed[uuid] = extension;
+                    return api.getExtensionInfo(uuid).then(extension => {
                         return this.onExtensionStateChange(uuid, state);
                     });
                 });
