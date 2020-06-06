@@ -17,15 +17,15 @@ function getRequest(url, config) {
 export default (function () {
   return {
     hello() {
-        return getRequest('/hello');
+        return getRequest('/hello/');
     },
 
     extensions(config) {
-        return getRequest('/extensions', config);
+        return getRequest('/extensions/', config);
     },
 
     updates(extensions, shellVersion, versionValidationEnabled) {
-        return client.post('/extensions/updates', {
+        return client.post('/extensions/updates/', {
             installed: extensions,
             shell_version: shellVersion,
             version_validation_enabled: versionValidationEnabled,
