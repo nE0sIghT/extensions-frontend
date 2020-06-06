@@ -28,12 +28,12 @@
 
                 <b-collapse id="search-wrapper" class='order-md-8' is-nav>
                     <b-navbar-nav>
-                        <b-nav-form right>
+                        <b-nav-form @submit="onSearch" right>
                             <b-input-group size="sm">
                                 <b-input-group-prepend is-text>
                                     <b-icon icon="search"></b-icon>
                                 </b-input-group-prepend>
-                                <b-form-input type="search" :placeholder="$t('Search extensions')"></b-form-input>
+                                <b-form-input v-model="search" type="search" :placeholder="$t('Search extensions')"></b-form-input>
                             </b-input-group>
                         </b-nav-form>
                     </b-navbar-nav>

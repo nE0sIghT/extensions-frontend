@@ -24,6 +24,15 @@ export default (function () {
         return getRequest('/extensions/', config);
     },
 
+    search(query, page = 1, page_size = 25) {
+        return client.get(`/extensions/search/${query}/`, {
+            params: {
+                page,
+                page_size,
+            },
+        });
+    },
+
     updates(extensions, shellVersion, versionValidationEnabled) {
         return client.post('/extensions/updates/', {
             installed: extensions,

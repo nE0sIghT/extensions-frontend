@@ -11,6 +11,7 @@ export default {
             },
             userMenu: {},
             messages: {},
+            search: "",
             unreviewed_extensions: 0,
             user: {}
         };
@@ -39,6 +40,12 @@ export default {
 
         },
 
+        onSearch(event) {
+            event.preventDefault();
+            this.$router.push(`/search/${this.search}`);
+            this.search = '';
+        },
+
         toggleUserMenu() {
             let dd = this.$refs.userDropdownMenu;
             dd.visible ? dd.hide() : dd.show();
@@ -50,5 +57,5 @@ export default {
         let { data: hello } = await this.api.server.hello();
         this.user = hello.user;
         this.backend_forms = hello.forms;
-    }
+    },
 };
