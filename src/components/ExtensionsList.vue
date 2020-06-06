@@ -42,7 +42,7 @@
                         aria-hidden="true"
                     ></b-icon>
                 </div>
-                <div class='controls'>
+                <div v-if='controls' class='controls'>
                     <extension-toggle :checked="isEnabled(extension)" @click="toggle(extension)"></extension-toggle>
                     <b-icon
                         v-if="isServerUpdateAvailable(extension)"
@@ -106,6 +106,7 @@ export default {
 
     props: {
         extensions: Array,
+        controls: Boolean,
     },
 
     methods: {

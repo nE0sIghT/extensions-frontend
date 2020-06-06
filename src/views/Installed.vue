@@ -3,6 +3,7 @@
        <extensions-list
            v-if="api.browser"
            :extensions="installedExtensions"
+           controls
         ></extensions-list>
         <div v-else>
             TODO: No plugin
