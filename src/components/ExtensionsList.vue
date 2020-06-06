@@ -3,7 +3,7 @@
         <div
             v-for="extension in extensions"
             :key="extension.uuid"
-            class='d-flex flex-column'
+            class='extension-row d-flex flex-column'
         >
             <b-overlay
                 :show="extension.busy"
@@ -12,7 +12,7 @@
                 spinner-variant="primary"
                 no-fade
             >
-            <div class='extensions-list-header'>
+            <div class='extension-row-header'>
                 <h3 class='m-0'>
                     <b-link :to="`/extension/${extension.uuid}`">
                         <img :src='getExtensionIcon(extension)' :alt='extension.name' />{{ extension.name }}
@@ -72,8 +72,10 @@
                     </div>
                 </div>
             </div>
-            <p class='author'><span v-if="extension.creator">By <b-link :to="`/user/${extension.creator.username}`">{{ extension.creator.username }}</b-link></span></p>
-            <p>{{ extension.description }}</p>
+            <div class='icon-align'>
+                <div class='author'><span v-if="extension.creator">By <b-link :to="`/user/${extension.creator.username}`">{{ extension.creator.username }}</b-link></span></div>
+                <div>{{ extension.description }}</div>
+            </div>
             </b-overlay>
         </div>
     </div>
@@ -103,7 +105,7 @@ export default {
     },
 
     props: {
-        extensions: Array
+        extensions: Array,
     },
 
     methods: {
@@ -169,6 +171,7 @@ export default {
     $extension-toggle-width: 54px;
     $icon_width: 32px;
     $control_padding: 2px;
+    $extension-row-padding: 1.5rem;
 
     .b-icon {
         color: #fff;
@@ -179,7 +182,21 @@ export default {
     }
 
     .extensions-list {
-        .extensions-list-header {
+        .extension-row {
+            padding: $extension-row-padding 0;
+            position: relative;
+        }
+
+        .extension-row:not(:last-child):after {
+            content: '';
+            position: absolute;
+            left: 10%;
+            bottom: 0px;
+            width: 80%;
+            border-bottom: 1px solid #aaa;
+        }
+
+        .extension-row-header {
             display: flex;
             align-items: center;
 
@@ -258,11 +275,11 @@ export default {
             }
         }
 
-        div > p {
+        .icon-align {
             margin-left: 38px;
         }
 
-        p.author {
+        .author {
             margin-bottom: 5px;
         }
     }
