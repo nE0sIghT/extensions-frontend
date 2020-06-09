@@ -24,11 +24,12 @@ export default (function () {
         return getRequest('/extensions/', config);
     },
 
-    search(query, page = 1, page_size = 25) {
+    search(query, page = 1, page_size = 25, ordering) {
         return client.get(`/extensions/search/${query}/`, {
             params: {
                 page,
                 page_size,
+                ordering,
             },
         });
     },

@@ -33,7 +33,7 @@
                                 <b-input-group-prepend is-text>
                                     <b-icon icon="search"></b-icon>
                                 </b-input-group-prepend>
-                                <b-form-input v-model="search" type="search" :placeholder="$t('Search extensions')"></b-form-input>
+                                <b-form-input v-model="search" type="search" :placeholder="$t('Search extensions…')"></b-form-input>
                             </b-input-group>
                         </b-nav-form>
                     </b-navbar-nav>
@@ -175,6 +175,7 @@
 <style lang="scss">
     $carousel-control-icon-width:        20px;
     $carousel-control-color:             '#000';
+    $custom-switch-width:              2rem;
     @import './css/bootstrap.scss';
 </style>
 <style lang="scss" src='./css/sweettooth.scss'></style>
