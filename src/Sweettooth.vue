@@ -74,23 +74,6 @@
                         <b-nav-item v-for="page in navigationMenu" :key="page.path" :to="page.path">{{ $t(page.name) }}</b-nav-item>
                     </b-navbar-nav>
                 </b-collapse>
-
-                <b-navbar-nav v-if='0' right>
-                    <li id="userDropdownMenu" class="dropdown">
-                    {% spaceless %}
-                    {% if request.user.is_authenticated %}
-                        <a href="{% url 'auth-profile' user=request.user.username %}" class="dropdown-toggle hidden-md avatar" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><img src="{% gravatar_url request request.user.email %}"></a>
-                    {% else %}
-                        <a href="{% url 'auth-login' %}" class="dropdown-toggle hidden-md" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">{% trans "Log in" %} <span class="caret"></span></a>
-                    {% endif %}
-                    {% endspaceless %}
-                        <ul class="dropdown-menu login_popup_form">
-                            <li>
-                                {% include "usermenu.html" %}
-                            </li>
-                        </ul>
-                    </li>
-                </b-navbar-nav>
             </b-container>
         </b-navbar>
     </header>
