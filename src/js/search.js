@@ -15,6 +15,7 @@ export default {
             search: {
                 text: '',
                 page_size: 25,
+                recommended: false,
                 ordering: 'none',
                 direction: 'desc',
                 orderingOptions: [
@@ -65,7 +66,13 @@ export default {
             ({ data: {
                 count: this.count,
                 results: this.extensions,
-            }} = await this.api.server.search(query, page, this.search.page_size, this.ordering));
+            }} = await this.api.server.search(
+                query,
+                page,
+                this.search.page_size,
+                this.ordering,
+                this.search.recommended
+            ));
             this.busy = false;
         },
 
@@ -74,6 +81,11 @@ export default {
             if(this.search.ordering != 'none')
             {
                 url += `&ordering=${this.ordering}`;
+            }
+
+            if(this.search.recommended)
+            {
+                url += `&recommended=${this.search.recommended}`;
             }
 
             return url;
@@ -100,6 +112,11 @@ export default {
             {
                 this.search.direction = 'asc';
             }
+        }
+
+        if(this.$route.query.recommended)
+        {
+            this.search.recommended = ["true", "1"].includes(this.$route.query.recommended.toLowerCase());
         }
 
         return this.searchExtensions(

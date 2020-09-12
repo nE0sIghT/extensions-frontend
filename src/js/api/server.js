@@ -24,12 +24,13 @@ export default (function () {
         return getRequest('/extensions/', config);
     },
 
-    search(query, page = 1, page_size = 25, ordering) {
+    search(query, page = 1, page_size = 25, ordering, recommended = false) {
         return client.get(`/extensions/search/${query}/`, {
             params: {
                 page,
                 page_size,
                 ordering,
+                recommended,
             },
         });
     },

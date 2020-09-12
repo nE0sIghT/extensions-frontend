@@ -9,6 +9,13 @@
                             :placeholder="$t('Search extensions…')"
                         ></b-form-input>
                     </b-form-group>
+                    <b-form-group :label="$t('Filter')" label-class="font-weight-bold">
+                        <b-form-checkbox
+                            v-model="search.recommended"
+                        >
+                            {{ $t('Recommended') }}
+                        </b-form-checkbox>
+                    </b-form-group>
                     <b-form-group :label="$t('Sort by')" label-class="font-weight-bold">
                         <b-form-radio-group
                             v-model="search.ordering"
