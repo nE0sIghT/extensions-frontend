@@ -70,7 +70,7 @@ export default {
         },
 
         searchLink(page) {
-            let url = `/search/${this.$route.params.query}/${page}?page_size=${this.search.page_size}`;
+            let url = `/search/${this.search.text}/${page}?page_size=${this.search.page_size}`;
             if(this.search.ordering != 'none')
             {
                 url += `&ordering=${this.ordering}`;

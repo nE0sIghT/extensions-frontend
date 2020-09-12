@@ -12,7 +12,7 @@ export default (() => [
       showInMenu: true,
     },
     {
-      path: '/search/:query/:page?',
+      path: '/search/:query?/:page?',
       name: 'Search extensions',
       component: () => import('../views/Search.vue'),
     },
