@@ -1,6 +1,8 @@
 import axios from 'axios'
 import qs from "qs"
 
+import constants from '../constants'
+
 const EGO_URL = 'http://localhost:8000/api/v1';
 const defaultRequestParameters = {
     paramsSerializer: (params) => qs.stringify(params, { arrayFormat: "brackets" })
@@ -25,14 +27,28 @@ export default (function () {
     },
 
     search(query, page = 1, page_size = 25, ordering, recommended = false) {
-        return client.get(`/extensions/search/${query}/`, {
-            params: {
-                page,
-                page_size,
-                ordering,
-                recommended,
-            },
-        });
+        if(query && query != '-')
+        {
+            return client.get(`/extensions/search/${query}/`, {
+                params: {
+                    page,
+                    page_size,
+                    ordering,
+                    recommended,
+                },
+            });
+        }
+        else
+        {
+            return this.extensions({
+                params: {
+                    page,
+                    page_size,
+                    ordering,
+                    status: constants.STATUS.ACTIVE,
+                }
+            });
+        }
     },
 
     updates(extensions, shellVersion, versionValidationEnabled) {

@@ -8,7 +8,7 @@
 
     <extensions-card
       :title="$t('New extensions')"
-      to="/search/?new"
+      to="/search/?ordering=-created"
       :extensions="recent.results"
       #default="{ extension }">
         <div class='small text-center'>Created {{ extension.created | moment("from", "now") }}</div>
@@ -16,7 +16,7 @@
 
     <extensions-card
       :title="$t('Last updated')"
-      to="/search/?updated"
+      to="/search/?ordering=-updated"
       :extensions="updated.results"
       #default="{ extension }">
         <div class='small text-center'>Updated {{ extension.updated | moment("from", "now") }}</div>
@@ -24,7 +24,7 @@
 
     <extensions-card
       :title="$t('Popular extensions')"
-      to="/search/?popular"
+      to="/search/?ordering=-popularity"
       :extensions="popular.results"
       #default="{ extension }">
         <div class='small text-center'>Installs: {{ extension.popularity }}</div>

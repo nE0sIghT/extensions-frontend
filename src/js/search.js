@@ -77,7 +77,7 @@ export default {
         },
 
         searchLink(page) {
-            let url = `/search/${this.search.text}/${page}?page_size=${this.search.page_size}`;
+            let url = `/search/${this.search.text || "-"}/${page}?page_size=${this.search.page_size}`;
             if(this.search.ordering != 'none')
             {
                 url += `&ordering=${this.ordering}`;
@@ -94,6 +94,10 @@ export default {
 
     created() {
         this.search.text = this.$route.params.query;
+        if(this.search.text == '-')
+        {
+            this.search.text = '';
+        }
 
         if(this.$route.query.page_size)
         {
@@ -120,7 +124,7 @@ export default {
         }
 
         return this.searchExtensions(
-            this.$route.params.query,
+            this.search.text,
             this.page,
         );
     },
