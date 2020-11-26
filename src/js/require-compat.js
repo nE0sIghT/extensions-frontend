@@ -1,3 +1,5 @@
+// @ts-nocheck
+
 const messages = (function() {
     return {
         addError: (message) => {

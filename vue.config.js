@@ -1,6 +1,6 @@
 module.exports = {
   devServer: {
-    host: 'localhost'
+    proxy: 'http://localhost:8000'
   },
   pluginOptions: {
     i18n: {

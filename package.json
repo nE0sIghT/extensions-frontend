@@ -1,37 +1,49 @@
 {
   "name": "extensions-frontend",
   "version": "1.0.0",
+  "private": true,
   "author": {
     "name": "Yuri Konotopov",
     "email": "ykonotopov@gnome.org"
   },
-  "license": "BSD-3-Clause",
-  "private": true,
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
     "test:unit": "vue-cli-service test:unit",
     "lint": "vue-cli-service lint",
+    "check": "tsc -p jsconfig.json",
     "i18n:report": "vue-cli-service i18n:report --src './src/**/*.?(js|vue)' --locales './src/locales/**/*.json'"
   },
   "dependencies": {
+    "@babel/runtime": "^7.12.5",
+    "@vue/composition-api": "^1.0.0-beta.20",
     "axios": "^0.19.2",
     "bootstrap": "^4.5.2",
     "bootstrap-vue": "^2.16.0",
     "core-js": "^3.6.4",
     "register-service-worker": "^1.7.1",
+    "universal-cookie": "^4.0.4",
     "vue": "^2.6.12",
     "vue-i18n": "^8.21.1",
     "vue-moment": "^4.1.0",
     "vue-router": "^3.4.3"
   },
   "devDependencies": {
+    "@types/chai": "^4.2.11",
+    "@types/mocha": "^5.2.4",
+    "@types/qs": "^6.9.5",
+    "@types/vue-moment": "^4.0.2",
+    "@types/webpack-env": "^1.16.0",
+    "@typescript-eslint/eslint-plugin": "^2.26.0",
+    "@typescript-eslint/parser": "^2.26.0",
     "@vue/cli-plugin-babel": "~4.3.0",
     "@vue/cli-plugin-eslint": "~4.3.0",
     "@vue/cli-plugin-pwa": "~4.3.0",
     "@vue/cli-plugin-router": "~4.3.0",
+    "@vue/cli-plugin-typescript": "^4.5.9",
     "@vue/cli-plugin-unit-mocha": "~4.3.0",
     "@vue/cli-service": "~4.3.0",
+    "@vue/eslint-config-typescript": "^5.0.2",
     "@vue/test-utils": "1.0.0-beta.31",
     "babel-eslint": "^10.1.0",
     "chai": "^4.1.2",
@@ -39,7 +51,9 @@
     "eslint-plugin-vue": "^6.2.2",
     "sass": "^1.26.10",
     "sass-loader": "^8.0.2",
+    "typescript": "~4.1.2",
     "vue-cli-plugin-i18n": "~1.0.1",
     "vue-template-compiler": "^2.6.12"
-  }
+  },
+  "license": "BSD-3-Clause"
 }

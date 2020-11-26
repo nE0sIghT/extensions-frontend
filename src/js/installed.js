@@ -1,94 +1,103 @@
-import constants from './constants'
-import browserMixin from './mixins/browser'
-import serverMixin from './mixins/server'
-import ExtensionsList from '../components/ExtensionsList'
+import { computed, defineComponent, del, reactive, set, watch } from '@vue/composition-api';
 
-export default {
-    mixins: [browserMixin, serverMixin],
+import server from './api/server'
+
+import BrowserAPI from '../components/BrowserAPI.vue';
+import LocalExtensionsList from '../components/LocalExtensionsList.vue'
+
+import { useBrowserAPI } from './compositions/browser';
+import { ExtensionState } from './constants';
+
+const Installed = defineComponent({
     components: {
-        ExtensionsList
+        'browser-api': BrowserAPI,
+        LocalExtensionsList
     },
+    setup() {
+        const { browser, onInitialize } = useBrowserAPI();
 
-    data() {
-        return {
-            api: {
-                server: false,
-            },
-            extensions: {
-                installed: {}
-            },
-        };
-    },
+        onInitialize((api) => {
+            api.addOnChangeHandler(onExtensionStateChange);
+        });
 
-    computed: {
-        installedExtensions() {
-            let installed = this.extensions.installed;
-            return installed && Object.values(installed)
-                .sort((a, b) => a.name.localeCompare(b.name));
-        }
-    },
+        const state = reactive({
+            /** @type {Record<string, NativeIntegration.LocalExtension>} */
+            localExtensions: {}
+        });
 
-    methods: {
-        onExtensionStateChange(uuid, state) {
-            if(state == constants.ExtensionState.UNINSTALLED)
-            {
-                if(this.extensions.installed[uuid])
-                {
-                    if(this.extensions.installed[uuid].inUpdate)
-                    {
-                        this.extensions.installed[uuid].state = state;
+        /**
+         * @param {string} uuid 
+         * @param {ExtensionState} extensionState
+         * @returns {void} 
+         */
+        function onExtensionStateChange(uuid, extensionState) {
+            if (extensionState == ExtensionState.UNINSTALLED) {
+                if (state.localExtensions[uuid]) {
+                    if (state.localExtensions[uuid].inUpdate) {
+                        state.localExtensions[uuid].state = extensionState;
                     }
-                    else
-                    {
-                        this.$delete(this.extensions.installed, uuid);
+                    else {
+                        del(state.localExtensions, uuid);
                     }
                 }
                 return;
             }
 
-            if(!this.extensions.installed[uuid]) {
-                return this.api.browser.then(api => {
-                    return api.getExtensionInfo(uuid).then(extension => {
-                        this.$set(this.extensions.installed, uuid, extension);
-                        return this.onExtensionStateChange(uuid, state);
-                    });
+            if (!state.localExtensions[uuid]) {
+                browser.api?.nativeApi.getExtensionInfo(uuid).then(extension => {
+                    set(state.localExtensions, uuid, extension);
+                    return onExtensionStateChange(uuid, extensionState);
                 });
             }
 
-            this.extensions.installed[uuid].state = state;
-        },
-    },
+            state.localExtensions[uuid].state = extensionState;
+        }
 
-    created() {
-        return this.api.browser.then(api => {
-            return api.listExtensions().then(installed => {
-                this.extensions.installed = installed;
+        watch(browser, ({ api }) => {
+            if (!api) {
+                return;
+            }
 
-                return this.api.server.extensions({
+            api.nativeApi.listExtensions().then(installed => {
+                state.localExtensions = installed;
+
+                return server.extensions({
                     params: {
-                        uuid: Object.keys(this.extensions.installed)
+                        uuid: Object.keys(state.localExtensions)
                     }
                 }).then(({ data: { results } }) => {
+                    /** @type {Record<string, number>} */
                     let request = {};
                     results.forEach(extension => {
-                        this.extensions.installed[extension.uuid] = Object.assign({}, this.extensions.installed[extension.uuid], extension);
+                        const info = Object.assign({}, state.localExtensions[extension.uuid], extension);
 
-                        if(!this.extensions.installed[extension.uuid].hasUpdate)
-                        {
-                            request[extension.uuid] = this.extensions.installed[extension.uuid].version;
+                        state.localExtensions[extension.uuid] = info;
+
+                        if (!info.hasUpdate) {
+                            request[extension.uuid] = state.localExtensions[extension.uuid].version;
                         }
                     });
 
-                    if(!this.disableUpdates)
-                    {
-                        return this.api.server.updates(request, api.shellVersion, api.versionValidationEnabled).then(({ data: results }) => {
+                    if (!api.disableUpdates) {
+                        server.updates(request, api.nativeApi.shellVersion, api.nativeApi.versionValidationEnabled).then(({ data: results }) => {
                             for (let [uuid, update] of Object.entries(results)) {
-                                this.$set(this.extensions.installed[uuid], 'update', update);
+                                state.localExtensions[uuid].update = update;
                             }
                         });
                     }
                 });
             });
         });
+
+        const installedExtensions = computed(() => {
+            return Object.values(state.localExtensions).sort((a, b) => a.name.localeCompare(b.name));
+
+        });
+
+        return {
+            installedExtensions
+        };
     }
-};
+});
+
+export default Installed;

@@ -1,20 +1,25 @@
 <template>
     <div class='extension-toggle'>
-        <div :checked="checked" @click="$emit('click', !checked)" class="toggle" :class="{'on' : checked}" ></div>
+        <div
+            :checked="checked"
+            @click="$emit('click', !checked)"
+            class="toggle"
+            :class="{'on' : checked}"
+        ></div>
     </div>
 </template>
 
 <script>
-    export default {
-        model: {
-            prop: 'checked',
-            event: 'click',
-        },
+export default {
+    model: {
+        prop: 'checked',
+        event: 'click',
+    },
 
-        props: {
-            checked: Boolean
-        },
-    }
+    props: {
+        checked: Boolean
+    },
+};
 </script>
 
 <style lang='scss' scoped>
@@ -24,7 +29,7 @@ $extension-toggle-circle-width: 8px;
 $extension-toggle-color: #4a86cf;
 
 .extension-toggle {
-    .toggle{
+    .toggle {
         cursor: pointer;
         width: $extension-toggle-width;
         height: $extension-toggle-height;
@@ -33,24 +38,28 @@ $extension-toggle-color: #4a86cf;
         border: 2px solid #ccc;
         position: relative;
         padding: 2px;
-        transition: border-color .25s, background-color .25s;
-    
-        &:before{
+        transition: border-color 0.25s, background-color 0.25s;
+
+        &:before {
             content: "";
             width: $extension-toggle-height - $extension-toggle-circle-width;
             height: $extension-toggle-height - $extension-toggle-circle-width;
             border-radius: 50%;
             display: block;
             background: #ccc;
-            transition: background-color .25s, background-color .25s, transform .25s;
+            transition: background-color 0.25s, background-color 0.25s,
+                transform 0.25s;
         }
-    
-        &.on{
-            border-color: $extension-toggle-color;;
+
+        &.on {
+            border-color: $extension-toggle-color;
             background-color: $extension-toggle-color;
-            &:before{
+            &:before {
                 background: #fff;
-                transform: translateX(($extension-toggle-width - $extension-toggle-circle-width) / 2)
+                transform: translateX(
+                    ($extension-toggle-width - $extension-toggle-circle-width) /
+                        2
+                );
             }
         }
     }

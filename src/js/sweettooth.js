@@ -1,19 +1,20 @@
-import serverMixin from './mixins/server'
+import Vue from 'vue'
+
+import server from './api/server'
 import routes from '../router/navigation'
 
-export default {
-    mixins: [serverMixin],
+const Sweettooth = Vue.extend({
 
     data() {
         return {
-            backend_forms: {
-
+            login: {
+                username: '',
+                password: ''
             },
-            userMenu: {},
             messages: {},
             search: "",
             unreviewed_extensions: 0,
-            user: {}
+            user: null
         };
     },
 
@@ -28,18 +29,44 @@ export default {
     },
 
     methods: {
+        /**
+         * @param {string} avatar
+         */
         avatar(avatar) {
             return avatar || '/images/avatar-default.svg';
         },
 
         can_review() {
-            return this.user.is_staff || this.user.is_superuser || this.user.user_permissions?.includes('review.can-review-extensions');
+            return this.user && (this.user.is_staff || this.user.is_superuser || this.user.user_permissions?.includes('review.can-review-extensions'));
         },
 
-        onLogin() {
-
+        logout() {
+            console.log('logout!');
+            this.user = null;
+            server.logout();
         },
 
+        /**
+         * @param {Event} event
+         */
+        onSubmit(event) {
+            event.preventDefault();
+
+            server.authorize(this.login.username, this.login.password).then(() => {
+                console.log('Authorized!');
+            });
+
+            this.$refs.userDropdownMenu.hide();
+
+            this.login = {
+                username: '',
+                password: ''
+            };
+        },
+
+        /**
+         * @param {Event} event
+         */
         onSearch(event) {
             event.preventDefault();
             this.$router.push(`/search/${this.search}`);
@@ -52,10 +79,17 @@ export default {
         }
     },
 
-    async mounted() {
-        // TODO: catch errors when we got notifications
-        let { data: hello } = await this.api.server.hello();
-        this.user = hello.user;
-        this.backend_forms = hello.forms;
+    /**
+     * @returns {void}
+     */
+    mounted() {
+        (async () => {
+            // TODO: catch errors when we got notifications
+            let { data: hello } = await server.hello();
+            this.user = hello.user;
+            this.backend_forms = hello.forms;
+        })().catch(err => console.error(err.message));
     },
-};
+});
+
+export default Sweettooth;
