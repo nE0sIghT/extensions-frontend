@@ -1,5 +1,3 @@
-import server from '../js/api/server';
-
 export default (() => [
   {
     path: '/',
@@ -16,29 +14,6 @@ export default (() => [
     path: '/accounts/profile/:id',
     name: 'Profile',
     component: () => import('../views/Profile.vue')
-  },
-  {
-    path: '/comments/posted/',
-    /**
-     * 
-     * @param {import('vue-router').Route} to 
-     * @param {import('vue-router').Route} _from 
-     * @param {import('vue-router').NavigationGuardNext} next 
-     */
-    beforeEnter: (to, _from, next) => {
-      const commentId = to.query.c;
-console.log(_from)
-      if (typeof commentId === 'string') {
-        server.comment(commentId).then((comment) => {
-          next(`/extension/${comment.data.object_pk}`)
-        }).catch(error => {
-          console.error(error.message);
-          next(`/`);
-        })
-      } else {
-        next(`/`);
-      }
-    }
   },
   {
     path: '/local',

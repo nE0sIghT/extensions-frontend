@@ -1,16 +1,14 @@
 <template>
-    <b-row>
-        <b-col cols="3">
+    <b-row class="comment">
+        <b-col cols="auto">
             <b-img :src="comment.gravatar" />
         </b-col>
-        <b-col cols="9">
-            <b-row>
-
-            </b-row>
-
+        <b-col>
             <b-row>
                 <b-col cols="auto">
-                    by {{ comment.author.username }}
+                    <b-link :to="getProfileLink(comment.author)">
+                        {{comment.author.username}}
+                    </b-link>
                 </b-col>
                 <b-col v-if="comment.rating && comment.rating > 0">
                     <star-rating
@@ -29,32 +27,62 @@
             </b-row>
             <b-row>
                 <b-col>
-                    {{ comment.comment }}
+                    <div>
+                        <p>{{ comment.comment }}</p>
+                    </div>
+                    <p class="time">{{ formattedDate }}</p>
                 </b-col>
             </b-row>
-            <b-row>
-                <!-- TODO: Format this 'normally' -->
-                {{ new Date(Date.parse(comment.submit_date)).toLocaleString() }}
-            </b-row>
         </b-col>
-
     </b-row>
 </template>
 
-<script>
-import StarRating from 'vue-star-rating';
+<style lang="scss" scoped>
+.comment {
+  margin-bottom: 5px;
+}
 
-import * as types from '../types';
+.time {
+    color: #999;
+}
+</style>
 
-export default {
+<script lang="ts">
+import { computed, defineComponent } from "@vue/composition-api";
+import StarRating from "vue-star-rating";
+
+import * as types from "../types";
+
+import { getProfileLink } from "../js/compositions/user";
+
+const formatter = new Intl.DateTimeFormat("default", {
+    year: "numeric",
+    month: "long",
+    day: "numeric"
+});
+
+export default defineComponent({
+    name: "Comment",
     components: {
         StarRating
     },
     props: {
         comment: {
             required: true,
-            type: types.Comment,
-        },
+            type: types.Comment
+        }
     },
-};
+    setup(props) {
+        const formattedDate = computed(() => {
+            const date = new Date(Date.parse(props.comment.submit_date));
+
+            return formatter.format(date);
+        });
+
+        return {
+            formattedDate,
+            getProfileLink
+        };
+    }
+});
 </script>

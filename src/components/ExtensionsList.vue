@@ -17,7 +17,7 @@
 
             </div>
             <div class='icon-align'>
-                <div class='author'><span v-if="extension.creator">By <b-link :to="`/accounts/profile/${extension.creator.id}`">{{ extension.creator.username }}</b-link></span></div>
+                <div class='author'><span v-if="extension.creator">By <b-link :to="getProfileLink(extension.creator)">{{ extension.creator.username }}</b-link></span></div>
                 <div>{{ extension.description }}</div>
             </div>
         </div>
@@ -25,29 +25,27 @@
 </template>
 
 <script>
+import { defineComponent } from '@vue/composition-api';
+
 import * as types from '../types';
 
-export default {
-    data() {
-        return {
-            busy: {
+import { getExtensionIcon } from '../js/compositions/extension';
+import { getProfileLink } from '../js/compositions/user';
 
-            },
+export default defineComponent({
+    props: {
+        extensions: {
+            type: types.Extensions,
+            default: [],
         }
     },
-    props: {
-        extensions: types.Extensions,
-        controls: Boolean,
-    },
-    methods: {
-        /**
-         * @param {sweettooth.Extension} extension
-         */
-        getExtensionIcon(extension) {
-            return extension.icon || `/images/plugin.png`;
-        },
-    },
-};
+    setup() {
+        return {
+            getExtensionIcon,
+            getProfileLink
+        };
+    }
+});
 </script>
 
 <style lang='scss' scoped>
@@ -93,71 +91,6 @@ $extension-row-padding: 1.5rem;
             height: 32px;
             margin-right: 6px;
             vertical-align: bottom;
-        }
-
-        .status-icons {
-            margin-left: 5px;
-
-            .b-icon {
-                width: 20px;
-                height: 20px;
-                padding: 0 4px;
-                margin: 0 $control_padding;
-            }
-
-            .extension-error {
-                padding: 0;
-            }
-        }
-
-        .controls {
-            display: flex;
-            align-items: center;
-            margin-left: auto;
-            min-width: $extension-toggle-width + ($icon_width * 3) +
-                ($control_padding * 4 * 2);
-
-            > * {
-                margin: 0 $control_padding;
-            }
-
-            .icon-wrapper,
-            .b-icon {
-                width: $icon_width;
-                height: $icon_width;
-                cursor: pointer;
-            }
-
-            .b-icon {
-                padding: 7px;
-            }
-
-            .b-icon:hover {
-                filter: brightness(125%);
-            }
-
-            .b-icon.disabled {
-                cursor: not-allowed;
-                opacity: 0.5;
-            }
-
-            .b-icon.switch {
-                width: 48px;
-                height: 100%;
-                padding: 0;
-                margin: 0 2px;
-            }
-
-            .switch::before {
-                content: "";
-                width: 16px;
-                height: 16px;
-                border-radius: 50%;
-                display: block;
-                background: #f00;
-                transition: background-color 0.25s, background-color 0.25s,
-                    transform 0.25s;
-            }
         }
     }
 

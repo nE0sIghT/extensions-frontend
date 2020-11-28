@@ -1,10 +1,12 @@
 import Vue from 'vue'
+import { BNavItemDropdown } from 'bootstrap-vue';
 
 import server from './api/server'
 import routes from '../router/navigation'
 
-const Sweettooth = Vue.extend({
+import { getProfileLink } from './compositions/user';
 
+const Sweettooth = Vue.extend({
     data() {
         return {
             login: {
@@ -14,17 +16,21 @@ const Sweettooth = Vue.extend({
             messages: {},
             search: "",
             unreviewed_extensions: 0,
+            /** @type {sweettooth.User | null} */
             user: null
         };
     },
 
     computed: {
+        /** @returns {number} */
         n_unreviewed_extensions() {
             return this.can_review() ? this.unreviewed_extensions : 0;
         },
-
         navigationMenu() {
             return routes.filter(page => page.showInMenu);
+        },
+        profileLink() {
+            return getProfileLink(this.user);
         }
     },
 
@@ -56,7 +62,11 @@ const Sweettooth = Vue.extend({
                 console.log('Authorized!');
             });
 
-            this.$refs.userDropdownMenu.hide();
+            let dd = this.$refs.userDropdownMenu;
+
+            if (dd instanceof BNavItemDropdown) {
+                dd.hide();
+            }
 
             this.login = {
                 username: '',
@@ -75,7 +85,10 @@ const Sweettooth = Vue.extend({
 
         toggleUserMenu() {
             let dd = this.$refs.userDropdownMenu;
-            dd.visible ? dd.hide() : dd.show();
+
+            if (dd instanceof BNavItemDropdown) {
+                dd.visible ? dd.hide() : dd.show();
+            }
         }
     },
 
@@ -87,7 +100,6 @@ const Sweettooth = Vue.extend({
             // TODO: catch errors when we got notifications
             let { data: hello } = await server.hello();
             this.user = hello.user;
-            this.backend_forms = hello.forms;
         })().catch(err => console.error(err.message));
     },
 });

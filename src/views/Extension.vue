@@ -22,7 +22,7 @@
                             <b-col>
                                 <p>
                                     by
-                                    <router-link :to="`/accounts/profile/${extension.creator.id}/`">{{
+                                    <router-link :to="getProfileLink(extension.creator)">{{
                     extension.creator.username
                   }}</router-link>
                                 </p>
@@ -67,7 +67,8 @@
         </b-row>
         <b-row>
             <b-col>
-                <div>
+                <h4>User Reviews</h4>
+                <div class="comment-holder">
                     <comment
                         v-for="comment of comments"
                         :key="comment.id"

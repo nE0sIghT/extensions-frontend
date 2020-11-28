@@ -11,6 +11,9 @@ import server from './api/server';
 
 import { useRoute } from '../router/utils';
 
+import { getProfileLink } from './compositions/user';
+
+
 /**
  * @param {{ rating: number }} state 
  */
@@ -180,6 +183,7 @@ const Extension = defineComponent({
 
         return {
             ...toRefs($state),
+            getProfileLink,
             screenshots
         }
     },

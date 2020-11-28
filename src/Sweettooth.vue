@@ -71,7 +71,7 @@
                 }}</span>
               </template>
               <div v-if="user" class="row">
-                <b-dropdown-item :to="`/accounts/profile/${user.id}`">{{
+                <b-dropdown-item :to="profileLink">{{
                   $t("User Profile")
                 }}</b-dropdown-item>
                 <b-dropdown-item to="/settings">{{

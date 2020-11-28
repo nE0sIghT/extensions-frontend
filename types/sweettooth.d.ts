@@ -6,22 +6,40 @@ declare global {
             name: string;
             icon?: string;
             description: string;
-            creator: {
-                id: string;
-                username: string;
-            };
+            creator: PublicUser;
             version: number;
             id: string;
             uuid: string;
             url?: string;
-            screenshots: Screenshot[];
+            screenshots: readonly Screenshot[];
             imagePromoMiddle?: string;
             promoTextEnabled?: string;
         }
 
         export interface Profile {
             username: string;
-            extensions: string[];
+            extensions: readonly string[];
+        }
+
+        export interface PublicUser {
+            id: number;
+            username: string;
+        }
+
+        export interface User extends PublicUser {
+            id: number;
+            username: string;
+            avatar: string;
+            last_login: string;
+            is_superuser?: boolean;
+            first_name: "";
+            last_name: "";
+            email: string;
+            is_staff: boolean;
+            is_active: boolean;
+            date_joined: string;
+            groups: readonly string[],
+            user_permissions: readonly string[]
         }
 
         export interface Screenshot {
@@ -33,10 +51,7 @@ declare global {
             id: string;
             gravatar: string;
             object_pk: number;
-            author: {
-                username: string;
-                id: number;
-            };
+            author: PublicUser;
             submit_date: string;
             comment: string;
             rating?: number;

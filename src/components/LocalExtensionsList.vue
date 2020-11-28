@@ -85,7 +85,7 @@
                     </div>
                 </div>
                 <div class='icon-align'>
-                    <div class='author'><span v-if="extension.creator">By <b-link :to="`/accounts/profile/${extension.creator.id}`">{{ extension.creator.username }}</b-link></span></div>
+                    <div class='author'><span v-if="extension.creator">By <b-link :to="getProfileLink(extension.creator)">{{ extension.creator.username }}</b-link></span></div>
                     <div>{{ extension.description }}</div>
                 </div>
             </b-overlay>
@@ -101,6 +101,7 @@ import * as types from '../types';
 import ExtensionToggle from './ExtensionToggle.vue'
 import { useBrowserAPI } from '../js/compositions/browser';
 import { getExtensionIcon } from '../js/compositions/extension';
+import { getProfileLink } from '../js/compositions/user';
 
 const defaultIconClasses = {
     'rounded-circle': true,
@@ -226,6 +227,7 @@ export default defineComponent({
             getToggleIcon,
             getToggleVariant,
             getPreferencesIconClasses,
+            getProfileLink,
             getDeleteIconClasses
         };
     },
