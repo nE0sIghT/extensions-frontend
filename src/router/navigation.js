@@ -18,6 +18,11 @@ export default (() => [
     component: () => import('../views/Profile.vue')
   },
   {
+    path: '/settings',
+    name: 'User Settings',
+    component: () => import('../views/Settings.vue')
+  },
+  {
     path: '/local',
     name: 'Installed',
     component: () => import('../views/Installed.vue'),
