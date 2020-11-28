@@ -6,12 +6,14 @@ export default (() => [
     showInMenu: true,
   },
   {
+    // TODO: Add redirect from /extension/:id/:slug -> /extension/:id
     path: '/extension/:id',
     name: 'Extension',
     component: () => import('../views/Extension.vue')
   },
   {
-    path: '/accounts/profile/:id',
+    // TODO: Add redirect from /accounts/profile/:username -> /profile/:id
+    path: '/profile/:id',
     name: 'Profile',
     component: () => import('../views/Profile.vue')
   },
