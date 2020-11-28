@@ -99,7 +99,10 @@ const Sweettooth = Vue.extend({
         (async () => {
             // TODO: catch errors when we got notifications
             let { data: hello } = await server.hello();
-            this.user = hello.user;
+
+            if (hello.user && hello.user.id != null) {
+                this.user = hello.user;
+            }
         })().catch(err => console.error(err.message));
     },
 });
