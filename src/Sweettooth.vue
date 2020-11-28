@@ -141,7 +141,7 @@
 
     <div class="clearfix"></div>
 
-    <div id="container" class="container gnome-content">
+    <div id="container" class="container gnome-content grow">
       <div class="col-sm-12">
         <!--
             <div id="message_container">
@@ -274,5 +274,21 @@ $carousel-control-icon-width: 20px;
 $carousel-control-color: "#000";
 $custom-switch-width: 2rem;
 @import "./css/bootstrap.scss";
+
+// Let the content of the page expand to push the footer down on 'short' pages
+#sweettooth {
+    display: flex;
+    flex-wrap: wrap;
+    height: 100vh;
+
+    & > div {
+      width: 100%;
+
+      &.grow {
+        flex: 1 0 0;
+      }
+    }
+}
+
 </style>
 <style lang="scss" src='./css/sweettooth.scss'></style>

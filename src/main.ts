@@ -11,15 +11,15 @@ import i18n from './i18n'
 
 import './registerServiceWorker'
 
-Vue.config.productionTip = false
+Vue.config.productionTip = false;
 
-Vue.use(VueCompositionAPI)
-Vue.use(BootstrapVue)
-Vue.use(BootstrapVueIcons)
+Vue.use(VueCompositionAPI);
+Vue.use(BootstrapVue);
+Vue.use(BootstrapVueIcons);
 Vue.use(VueMoment);
 
 new Vue({
   router,
   i18n,
   render: h => h(Sweettooth)
-}).$mount('#sweettooth')
+}).$mount('#sweettooth');

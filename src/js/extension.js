@@ -1,93 +1,188 @@
 import Vue from 'vue';
+import Axios from 'axios';
+import StarRating from 'vue-star-rating';
+
+import { computed, defineComponent, onMounted, onUnmounted, reactive, toRefs, nextTick } from '@vue/composition-api';
 
 import ScreenshotCarousel from '../components/ScreenshotCarousel.vue';
 import Comment from '../components/Comment.vue';
 
-import server from './api/server'
-import Axios from 'axios';
+import server from './api/server';
 
-const Extension = Vue.extend({
-    data() {
-        return {
-            /** @type {sweettooth.Extension | null} */
-            extension: null,
-            /** @type {sweettooth.Comment[]} */
-            comments: [],
-            form_html: ''
-        };
-    },
+import { useRoute } from '../router/utils';
+
+/**
+ * @param {{ rating: number }} state 
+ */
+const StarComponent = state => defineComponent({
+    render(h) {
+        return h(StarRating, {
+            props: {
+                rating: state.rating,
+                showRating: false,
+                roundedCorners: true,
+                activeColor: "#555555",
+                inactiveColor: "#ffffff",
+                borderColor: "#555555",
+                borderWidth: 5,
+                starSize: 30,
+                padding: 7
+            },
+            on: {
+                /**
+                 * @param {number} rating
+                 */
+                'rating-selected'(rating) {
+                    state.rating = rating;
+                }
+            }
+        });
+    }
+});
+
+const Extension = defineComponent({
     components: {
         Comment,
         ScreenshotCarousel
     },
-    computed: {
+    setup() {
+        const { route } = useRoute();
+
+        const $state = reactive({
+            /** @type {sweettooth.Extension | null} */
+            extension: null,
+            /** @type {sweettooth.Comment[]} */
+            comments: [],
+            form_html: '',
+        });
+
+        const $starState = reactive({
+            rating: -1
+        });
+
+        /** @type {Vue | null} */
+        let ratingComponent = null;
+        /** @type {HTMLFormElement | null} */
+        let formElement = null;
+
+        const screenshots = computed(() => {
+            return $state.extension && $state.extension.screenshots ? [...$state.extension.screenshots] : [];
+        });
+
+        const extensionId = computed(() => route.value.params.id);
+
+
+        async function getExtension() {
+            const response = await server.extension(extensionId.value);
+
+            return response.data;
+        }
+
+        async function getComments() {
+            const response = await server.comments(extensionId.value);
+
+            return response.data?.results ?? [];
+        }
+
+        async function getCommentForm() {
+            const response = await server.comment_form(extensionId.value);
+
+            return response.data;
+        }
+
         /**
-         * @returns {sweettooth.Screenshot[]}
+         * @param {Event} event 
          */
-        screenshots() {
-            return this.extension && this.extension.screenshots ? [...this.extension.screenshots] : [];
-        }
-    },
+        function onSubmit(event) {
+            if (!formElement) {
+                return;
+            }
 
-    methods: {
-        getExtension() {
-            return server.extension(this.$route.params.id);
-        },
-        getComments() {
-            return server.comments(this.$route.params.id);
-        },
-        getCommentForm() {
-            return server.comment_form(this.$route.params.id);
-        }
-    },
+            event.preventDefault();
 
-    /**
-     * @returns {void}
-     */
-    mounted() {
-        (async () => {
-            ([{ data: this.extension }, { data: { results: this.comments } }] = await Promise.all([
-                this.getExtension(),
-                this.getComments()
-            ]));
+            const data = new FormData(formElement);
 
-            this.form_html = (await this.getCommentForm()).data;
-        })()
-            .catch(err => console.error(err.message))
-            // TODO: Check that finally is polyfilled.
-            .finally(() => {
-                this.$nextTick(() => {
-                    const form = document.querySelector('#commentFormContainer > form');
-                    console.log(form);
-                    if (form instanceof HTMLFormElement) {
-                        console.log("doing...")
-                        form.addEventListener("submit", (event) => {
-                            event.preventDefault();
-                            console.log("submitting...")
-                            const data = new FormData(form);
+            if ($starState.rating > 0) {
+                data.append('rating', `${$starState.rating}`);
+            }
 
-                            Axios.post(form.action, data, {
-                                headers: {
-                                    'Content-Type': 'multipart/form-data',
-                                    'X-Requested-With': 'XMLHttpRequest'
-                                }, maxRedirects: 0
-                            }).then(() => {
-                                console.log("Submitted!");
-                                form.reset();
+            Axios.post(formElement.action, data, {
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                    'X-Requested-With': 'XMLHttpRequest'
+                }, maxRedirects: 0
+            }).then(() => {
+                // Reset the star rating
+                $starState.rating = -1;
+                // Clear the form fields
+                formElement?.reset();
 
-                                return this.getComments();
-                            }).then(response => {
-                                console.log("uodatubg cinnebts,,,");
-                                this.comments = response.data.results;
-                            }).catch(error => {
-                                console.error(error);
-                            });
-                        });
-                    }
-                })
-
+                return getComments();
+            }).then(comments => {
+                $state.comments = comments;
+            }).catch(error => {
+                console.error(error);
             });
-    }
+        }
+
+        onMounted(() => {
+            (async () => {
+                ([
+                    $state.extension,
+                    $state.comments,
+                    $state.form_html
+                ] = await Promise.all([
+                    getExtension(),
+                    getComments(),
+                    getCommentForm()
+                ]));
+            })()
+                .catch(err => console.error(err.message))
+                // TODO: Check that finally is polyfilled.
+                .finally(() => {
+                    // We have to wait for the next render tick for the comment form to be loaded via v-html.
+                    nextTick(() => {
+                        // Select the element.
+                        const element = document.querySelector('#commentFormContainer > form');
+
+                        if (!(element instanceof HTMLFormElement)) {
+                            return;
+                        }
+
+                        formElement = element;
+                        formElement.addEventListener('submit', onSubmit);
+
+                        const rating = formElement.querySelector('.rating');
+
+                        if (!rating) {
+                            return;
+                        }
+
+                        const mountpoint = document.createElement('div');
+
+                        rating.append(mountpoint);
+
+                        ratingComponent = new Vue({
+                            render: h => h(StarComponent($starState))
+                        }).$mount(mountpoint);
+                    });
+                });
+        });
+
+        onUnmounted(() => {
+            formElement?.removeEventListener('submit', onSubmit);
+            // Rating component isn't a child component so we need to manually chain destroy.
+            ratingComponent?.$destroy();
+
+            formElement = null;
+            ratingComponent = null;
+        });
+
+        return {
+            ...toRefs($state),
+            screenshots
+        }
+    },
 });
 
 export default Extension;

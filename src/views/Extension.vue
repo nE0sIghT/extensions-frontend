@@ -76,7 +76,10 @@
                 </div>
             </b-col>
             <b-col>
-                <div v-html="form_html" id="commentFormContainer" />
+                <div
+                    v-html="form_html"
+                    id="commentFormContainer"
+                />
             </b-col>
         </b-row>
     </b-container>

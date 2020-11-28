@@ -26,7 +26,8 @@
     "vue": "^2.6.12",
     "vue-i18n": "^8.21.1",
     "vue-moment": "^4.1.0",
-    "vue-router": "^3.4.3"
+    "vue-router": "^3.4.3",
+    "vue-star-rating": "^1.7.0"
   },
   "devDependencies": {
     "@types/chai": "^4.2.11",
