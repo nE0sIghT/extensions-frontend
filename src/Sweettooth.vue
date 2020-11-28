@@ -47,11 +47,11 @@
                         <template v-else v-slot:button-content>
                             <span class="d-none d-md-inline dropdown-toggle">{{ $t("Log in") }}</span>
                         </template>
-                        <div v-if="user.is_authenticated" class="row">
+                        <template v-if="user.is_authenticated">
                             <b-dropdown-item :href="`/profile/${user.id}`">{{ $t('User Profile') }}</b-dropdown-item>
                             <b-dropdown-item href="/settings">{{ $t('User Settings') }}</b-dropdown-item>
                             <b-dropdown-item @click="onLogout">{{ $t('Log out') }}</b-dropdown-item>
-                        </div>
+                        </template>
                         <b-dropdown-form v-else class='login_popup_form px-0'>
                             <b-form @submit.prevent="onLogin">
                                 <b-form-group label="Username" label-for="username" label-class="font-weight-bold">
