@@ -70,17 +70,27 @@
                   $t("Log in")
                 }}</span>
               </template>
-              <div v-if="user" class="row">
-                <b-dropdown-item :to="profileLink">{{
+              <template v-if="user">
+                <!-- Set 'active-class' to avoid the default active styling. -->
+                <b-dropdown-item 
+                  exact-active-class="no-active-style"
+                  active-class="no-active-style"
+                  :to="profileLink">{{
                   $t("User Profile")
                 }}</b-dropdown-item>
-                <b-dropdown-item to="/settings">{{
+                <b-dropdown-item 
+                  exact-active-class="no-active-style"
+                  active-class="no-active-style"
+                  to="/settings">{{
                   $t("User Settings")
                 }}</b-dropdown-item>
-                <b-dropdown-item @click="logout">{{
+                <b-dropdown-item
+                  exact-active-class="no-active-style"
+                  active-class="no-active-style"
+                  @click="logout">{{
                   $t("Log out")
                 }}</b-dropdown-item>
-              </div>
+              </template>
               <b-dropdown-form v-else class="login_popup_form px-0" @submit="onSubmit">
                 <b-form-group>
                   <b-form-input
