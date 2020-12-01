@@ -1,22 +1,24 @@
 import Vue from 'vue'
 
-import { BootstrapVue, BootstrapVueIcons } from 'bootstrap-vue'
-import VueCompositionAPI from '@vue/composition-api';
-import VueMoment from 'vue-moment'
+import './configure';
 
 import Sweettooth from './Sweettooth.vue'
 
-import router from './router'
-import i18n from './i18n'
+import router from './router';
+import i18n from './i18n';
 
-import './registerServiceWorker'
+import server from './js/api/server';
 
-Vue.config.productionTip = false;
+import './registerServiceWorker';
 
-Vue.use(VueCompositionAPI);
-Vue.use(BootstrapVue);
-Vue.use(BootstrapVueIcons);
-Vue.use(VueMoment);
+// Initiate a request for the current user information.
+try {
+  server.hello().catch(err => {
+    console.error(err);
+  });
+} catch (error) {
+  console.error(error.message);
+}
 
 new Vue({
   router,

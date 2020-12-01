@@ -91,7 +91,7 @@
                   $t("Log out")
                 }}</b-dropdown-item>
               </template>
-              <b-dropdown-form v-else class="login_popup_form px-0" @submit="onSubmit">
+              <b-dropdown-form v-else class="login_popup_form px-0" ref="loginForm" @submit="onLogin" @reset="onRegister">
                 <b-form-group>
                   <b-form-input
                     type="text"
@@ -100,7 +100,8 @@
                     placeholder="Username or email"
                     class="form-control"
                     required
-                    v-model="login.username"
+                    :state="login.username.state"
+                    v-model="login.username.text"
                   />
                 </b-form-group>
                 <b-form-group>
@@ -109,10 +110,14 @@
                     name="password"
                     placeholder="Password"
                     class="form-control"
+                    :state="login.password.state"
                     required
                     id="id_password"
-                    v-model="login.password"
+                    v-model="login.password.text"
                   />
+                  <b-form-invalid-feedback :state="login.password.state">
+                    {{ login.password.feedback }}
+                  </b-form-invalid-feedback>
                 </b-form-group>
                 <b-form-group>
                   <b-button type="submit" variant="primary" block>{{
@@ -127,7 +132,7 @@
                 <b-dropdown-divider></b-dropdown-divider>
                 <p>{{ $t("Don't have an account?") }}</p>
                 <b-form-group>
-                  <b-button to="/register" variant="success" block>{{
+                  <b-button type="reset" variant="success" block>{{
                     $t("Register")
                   }}</b-button>
                 </b-form-group>
@@ -137,12 +142,8 @@
 
           <b-collapse id="navbar-wrapper" class="order-md-1" is-nav>
             <b-navbar-nav>
-              <b-nav-item
-                v-for="page in navigationMenu"
-                :key="page.path"
-                :to="page.path"
-                >{{ $t(page.name) }}</b-nav-item
-              >
+              <b-nav-item to="/">{{ $t('Extensions') }}</b-nav-item>
+              <b-nav-item to="/installed/">{{ $t('Installed') }}</b-nav-item>
             </b-navbar-nav>
           </b-collapse>
         </b-container>
@@ -151,8 +152,8 @@
 
     <div class="clearfix"></div>
 
-    <div id="container" class="container gnome-content grow">
-      <div class="col-sm-12">
+    <b-container id="container" class="gnome-content grow">
+      <b-col>
         <!--
             <div id="message_container">
                 <p v-for="message in messages" :key="message.id" :class="message.tags" class="message">{{ message.text }}</p>
@@ -161,17 +162,16 @@
                 {% endblock %}
             </div>
             -->
-        <router-view />
-      </div>
-    </div>
+          <router-view />
+        </b-col>
+    </b-container>
 
     <div class="clearfix"></div>
 
     <div id="footer">
-      <div class="container">
+      <b-container>
         <div class="row">
-          <div class="col-sm-12">
-            <div class="links col-xs-12 col-sm-9">
+          <b-col class="links" cols="12" sm="9">
               <div class="menu-footer-container">
                 <ul id="menu-footer" class="menu">
                   <li
@@ -247,32 +247,29 @@
                   </li>
                 </ul>
               </div>
-            </div>
-          </div>
+          </b-col>
         </div>
-      </div>
+      </b-container>
       <!-- footnotes -->
-      <div class="container">
-        <div class="row">
-          <div class="col-sm-12">
-            <div id="footnotes" class="col-sm-9">
+      <b-container>
+        <b-row>
+            <b-col id="footnotes" sm="9">
               &copy; <strong class="gnome_logo">The GNOME Project</strong><br />
-              <small
-                >Free to share and remix:
-                <a href="https://creativecommons.org/licenses/by/3.0/"
-                  >Creative Commons CC-BY</a
-                >. Optimised for standards. Hosted by
-                <a href="https://www.redhat.com/">Red Hat</a>. Powered by
-                <a href="https://www.djangoproject.com">Django</a>,
-                <a href="https://vuejs.org">Vue.js</a> and
-                <a href="https://gitlab.gnome.org/Infrastructure/extensions-web"
-                  >SweetTooth</a
-                ></small
-              >
-            </div>
-          </div>
-        </div>
-      </div>
+              <small>
+                Free to share and remix:
+                <a href="https://creativecommons.org/licenses/by/3.0/">
+                  Creative Commons CC-BY
+                </a>. Optimised for standards. Hosted by
+                  <a href="https://www.redhat.com/">Red Hat</a>. Powered by
+                  <a href="https://www.djangoproject.com">Django</a>,
+                  <a href="https://vuejs.org">Vue.js</a> and
+                  <a href="https://gitlab.gnome.org/Infrastructure/extensions-web">
+                  SweetTooth
+                </a>
+              </small>
+            </b-col>
+        </b-row>
+      </b-container>
       <div class="clear"></div>
     </div>
   </div>

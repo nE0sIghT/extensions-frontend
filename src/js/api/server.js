@@ -1,9 +1,10 @@
+import Cookie from 'universal-cookie';
 import axios from 'axios'
 import qs from "qs"
 
-import * as constants from '../constants'
+import { reactive, toRef } from '@vue/composition-api';
 
-import Cookie from 'universal-cookie';
+import * as constants from '../constants'
 
 const EGO_URL = '/api/v1';
 
@@ -42,10 +43,11 @@ function GET(url, config) {
     return client.get(url, Object.assign({}, defaultGetParameters, config));
 }
 
-const cookie = new Cookie();
-
 async function ensureCSRF() {
+    const cookie = new Cookie();
+
     let csrftoken = cookie.get('csrftoken');
+
     if (!csrftoken) {
         await GET('/auth/csrf/');
 
@@ -88,9 +90,79 @@ function POST(url, data = {}, config = {}) {
 /** @typedef {APIResultSet<sweettooth.Extension>} ExtensionResults */
 /** @typedef {APIResultSet<sweettooth.Comment>} CommentResults */
 
+/**
+ * @typedef {object} RegistrationInfo
+ * @property {string} email
+ * @property {string} username
+ * @property {string} password
+ * @property {string} passwordConfirm
+ */
+
 class ServerAPI {
-    hello() {
-        return GET('/hello/');
+    constructor() {
+        this._authState = reactive({
+            /** @type {sweettooth.User | null} */
+            user: null
+        });
+    }
+
+    /**
+     * @returns {import('@vue/composition-api').Ref<sweettooth.User | null>}
+     */
+    getUser() {
+        return toRef(this._authState, 'user');
+    }
+
+    async hello() {
+        const { data } = await GET('/hello/');
+
+        if (data.user && data.user.id != null) {
+            this._authState.user = data.user;
+        }
+
+        return this._authState;
+    }
+
+    /**
+     * @param {RegistrationInfo} info
+     */
+    register(info) {
+        const { username, email, password, passwordConfirm } = info;
+
+        return POST('/accounts/register/', {
+            username,
+            email,
+            password,
+            password_confirm: passwordConfirm
+        });
+    }
+
+    /**
+     * @param {string} userId
+     * @param {string} email
+     * @param {string} timestamp
+     * @param {string} signature
+     */
+    verifyEmail(userId, email, timestamp, signature) {
+        return POST('/accounts/verify-email/', {
+            user_id: `${userId}`,
+            email,
+            timestamp,
+            signature
+        });
+    }
+
+    /**
+     * @param {string} userId
+     * @param {string} timestamp
+     * @param {string} signature
+     */
+    verifyUser(userId, timestamp, signature) {
+        return POST('/accounts/verify-registration/', {
+            user_id: `${userId}`,
+            timestamp,
+            signature
+        })
     }
 
     /**
@@ -114,6 +186,8 @@ class ServerAPI {
 
     logout() {
         // TODO: Write the backend endpoint for logout.
+        this._authState.user = null;
+
         return POST('/auth/logout/');
     }
 

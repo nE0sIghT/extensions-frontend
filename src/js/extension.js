@@ -9,7 +9,7 @@ import Comment from '../components/Comment.vue';
 
 import server from './api/server';
 
-import { useRoute } from '../router/utils';
+import { useRouter } from '../router/utils';
 
 import { getProfileLink } from './compositions/user';
 
@@ -49,7 +49,7 @@ const Extension = defineComponent({
         ScreenshotCarousel
     },
     setup() {
-        const { route } = useRoute();
+        const { route } = useRouter();
 
         const $state = reactive({
             /** @type {sweettooth.Extension | null} */

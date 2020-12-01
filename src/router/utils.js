@@ -1,6 +1,6 @@
 import { getCurrentInstance, reactive, watch, toRefs } from '@vue/composition-api';
 
-export function useRoute() {
+export function useRouter() {
     const instance = getCurrentInstance();
 
     if (!instance) {
@@ -14,10 +14,12 @@ export function useRoute() {
     }
 
     const state = reactive({
-        route: instance.$route
+        route: instance.$route,
+        router: instance.$router,
     });
 
     watch(() => instance.$route, (route) => state.route = route);
+    watch(() => instance.$router, (router) => state.router = router);
 
     return { ...toRefs(state) };
 }
