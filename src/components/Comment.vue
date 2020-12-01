@@ -39,7 +39,7 @@
 
 <style lang="scss" scoped>
 .comment {
-  margin-bottom: 5px;
+    margin-bottom: 5px;
 }
 
 .time {
@@ -54,8 +54,9 @@ import StarRating from "vue-star-rating";
 import * as types from "../types";
 
 import { getProfileLink } from "../js/compositions/user";
+import { getBrowserLocales } from "../js/i18n/utils";
 
-const formatter = new Intl.DateTimeFormat("default", {
+const formatter = new Intl.DateTimeFormat(getBrowserLocales(), {
     year: "numeric",
     month: "long",
     day: "numeric"

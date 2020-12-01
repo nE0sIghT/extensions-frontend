@@ -6,7 +6,15 @@
                 controls
             ></local-extensions-list>
             <div slot="fallback">
-                TODO: No plugin
+                <i18n
+                    tag="p"
+                    path="missing-native-plugin.text"
+                    for="missing-native-plugin.link"
+                >
+                    <template v-slot:link>
+                        <a href="/about/#no-detection">{{ $t('missing-native-plugin.link') }}</a>
+                    </template>
+                </i18n>
             </div>
         </browser-api>
     </b-container>

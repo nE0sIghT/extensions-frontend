@@ -67,7 +67,7 @@
         </b-row>
         <b-row>
             <b-col>
-                <h4>User Reviews</h4>
+                <h4>{{ $t('User Reviews') }} </h4>
                 <div class="comment-holder">
                     <comment
                         v-for="comment of comments"
@@ -78,9 +78,22 @@
             </b-col>
             <b-col>
                 <div
+                    v-if="user"
                     v-html="form_html"
                     id="commentFormContainer"
                 />
+                <!-- If user == null, the user is not signed in. -->
+                <div v-else>
+                    <i18n
+                        tag="p"
+                        path="comment-login-prompt.text"
+                        for="comment-login-prompt.link"
+                    >
+                        <template v-slot:link>
+                            <a href="/login">{{ $t('comment-login-prompt.link') }}</a>
+                        </template>
+                    </i18n>
+                </div>
             </b-col>
         </b-row>
     </b-container>

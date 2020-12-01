@@ -10,7 +10,7 @@
                 <b-form @submit="onSubmit">
                     <b-form-group
                         id="username-input-group"
-                        label="Username"
+                        :label="$t('Username')"
                         label-for="username-input"
                     >
                         <b-form-input
@@ -27,7 +27,7 @@
                     </b-form-group>
                     <b-form-group
                         id="email-input-group"
-                        label="Email address"
+                        :label="$t('Email')"
                         label-for="email-input"
                     >
                         <b-form-input
@@ -41,7 +41,7 @@
 
                     <b-form-group
                         id="password-input-group"
-                        label="Password"
+                        :label="$t('Password')"
                         label-for="password-input"
                     >
                         <b-form-input
@@ -55,7 +55,7 @@
 
                     <b-form-group
                         id="password-confirm-input-group"
-                        label="Confirm password"
+                        :label="$t('Password confirmation')"
                         label-for="password-confirm-input"
                     >
                         <b-form-input
@@ -67,7 +67,7 @@
                             aria-describedby="password-confirm-help-text"
                         />
                         <b-form-text id="password-confirm-help-text">
-                            Enter the same password as before, for verification.
+                            {{ $t('Enter the same password as before, for verification.') }}
                         </b-form-text>
                     </b-form-group>
 

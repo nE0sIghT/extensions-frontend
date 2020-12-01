@@ -181,8 +181,11 @@ const Extension = defineComponent({
             ratingComponent = null;
         });
 
+        const user = server.getUser();
+
         return {
             ...toRefs($state),
+            user,
             getProfileLink,
             screenshots
         }

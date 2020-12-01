@@ -48,7 +48,7 @@
                   <b-form-input
                     v-model="search"
                     type="search"
-                    :placeholder="$t('Search extensions…')"
+                    :placeholder="$t('Search for extensions…')"
                   ></b-form-input>
                 </b-input-group>
               </b-nav-form>
@@ -97,7 +97,7 @@
                     type="text"
                     name="username"
                     autofocus="autofocus"
-                    placeholder="Username or email"
+                    :placeholder="$t('Username or email')"
                     class="form-control"
                     required
                     :state="login.username.state"
@@ -108,7 +108,7 @@
                   <b-form-input
                     type="password"
                     name="password"
-                    placeholder="Password"
+                    :placeholder="$t('Password')"
                     class="form-control"
                     :state="login.password.state"
                     required
@@ -143,7 +143,7 @@
           <b-collapse id="navbar-wrapper" class="order-md-1" is-nav>
             <b-navbar-nav>
               <b-nav-item to="/">{{ $t('Extensions') }}</b-nav-item>
-              <b-nav-item to="/installed/">{{ $t('Installed') }}</b-nav-item>
+              <b-nav-item to="/local/">{{ $t('Installed extensions') }}</b-nav-item>
             </b-navbar-nav>
           </b-collapse>
         </b-container>
