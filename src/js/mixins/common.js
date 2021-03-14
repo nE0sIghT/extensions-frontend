@@ -1,5 +1,9 @@
 export default {
     methods: {
+        getExtensionIcon(extension) {
+            return extension.icon || '/images/plugin.png';
+        },
+
         versionCompare(a, b) {
             a = a.split(".").map(parseInt);
             b = b.split(".").map(parseInt);
