@@ -16,4 +16,9 @@ export default (() => [
       name: 'Search extensions',
       component: () => import('../views/Search.vue'),
     },
+    {
+      path: '/extension/:uuid',
+      name: 'Extension',
+      component: () => import('../views/Extension.vue'),
+    },
 ])();

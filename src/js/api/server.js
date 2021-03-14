@@ -22,8 +22,20 @@ export default (function () {
         return getRequest('/hello/');
     },
 
+    extension(uuid) {
+        return getRequest(`/extensions/${uuid}/`);
+    },
+
     extensions(config) {
         return getRequest('/extensions/', config);
+    },
+
+    extensionVersions(uuid) {
+        return getRequest('/extensions-versions/', {
+            params: {
+                'extension__uuid': uuid,
+            },
+        });
     },
 
     search(query, page = 1, page_size = 25, ordering, recommended = false) {
