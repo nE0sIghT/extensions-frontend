@@ -1,3 +1,17 @@
+let prerelease_versions = {
+    'alpha': -3,
+    'beta': -2,
+    'rc': -1,
+};
+
+function parseGNOMEVersion(value) {
+    if(Object.keys(prerelease_versions).includes(value)) {
+        return prerelease_versions[value];
+    }
+
+    return parseInt(value);
+}
+
 export default {
     methods: {
         getExtensionIcon(extension) {
@@ -5,8 +19,8 @@ export default {
         },
 
         versionCompare(a, b) {
-            a = a.split(".").map(parseInt);
-            b = b.split(".").map(parseInt);
+            a = a.split(".").map(parseGNOMEVersion);
+            b = b.split(".").map(parseGNOMEVersion);
 
             for(let i = 0; i < Math.max(a.length, b.length); i++) {
                 if(typeof(a[i]) == 'undefined' || typeof(b[i]) == 'undefined')
