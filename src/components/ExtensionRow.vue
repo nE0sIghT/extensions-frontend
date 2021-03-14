@@ -83,7 +83,11 @@
           </div>
         </div>
         <div v-if="showControls && isUninstalled(extension)" class="controls">
-          <b-button variant="primary" class="float-right">Install</b-button>
+          <b-button
+            variant="primary"
+            class="float-right"
+            @click="onInstall(extension)"
+          >Install</b-button>
         </div>
       </div>
       <h6 class="author">by <user-link :user="extension.creator" /></h6>
@@ -141,10 +145,6 @@ export default {
       type: Boolean,
       default: false,
     },
-  },
-
-  data() {
-    return {};
   },
 
   computed: {
@@ -214,6 +214,17 @@ export default {
         !extension.state ||
         extension.state == constants.ExtensionState.UNINSTALLED
       );
+    },
+
+    onInstall(extension) {
+      if(this.integrationReady)
+      {
+        this.installExtension(extension);
+      }
+      else
+      {
+        window.open(`gnome-extensions://${extension.uuid}?action=install`, '_self');
+      }
     },
 
     downloads(extension) {

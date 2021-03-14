@@ -11,6 +11,7 @@ export default {
                 browser: false,
             },
             disableUpdates: false,
+            integrationReady: false,
         };
     },
 
@@ -108,6 +109,8 @@ export default {
             browser.addOnChangeHandler(this.onExtensionStateChange);
             browser.addOnShellRestartHandler(this.onShellRestart);
             browser.addOnShellSettingChangedHandler(this.onShellSettingChanged);
+
+            this.integrationReady = true;
 
             return api;
         }).catch((error) => {
