@@ -57,6 +57,7 @@
                         ></b-pagination-nav>
                         <extensions-list
                             :extensions="extensions"
+                            show-rating
                         ></extensions-list>
                         <b-pagination-nav
                             :value="page"
