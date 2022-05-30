@@ -25,5 +25,11 @@ export default (() => {
             ACTIVE:     3,
             WAITING:    4,
         },
+
+        BROWSER_EVENT: {
+            CHANGE: 'browser-event-change',
+            SHELL_RESTART: 'browser-event-shell-restart',
+            SHELL_SETTING_CHANGES: 'browser-event-setting-changed',
+        }
     };
 })();

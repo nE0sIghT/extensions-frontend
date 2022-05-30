@@ -112,8 +112,6 @@
 </template>
 
 <script>
-import common from "../js/mixins/common";
-import browserMixin from "../js/mixins/browser";
 import ExtensionToggle from "./ExtensionToggle";
 import UserLink from "../components/UserLink";
 import constants from "../js/constants";
@@ -123,8 +121,6 @@ const defaultIconClasses = {
 };
 
 export default {
-  mixins: [common, browserMixin],
-
   components: {
     ExtensionToggle,
     UserLink,
@@ -242,7 +238,7 @@ export default {
 
       extension.busy = true;
       let enabled = this.isEnabled(extension);
-      let api = await this.api.browser;
+      let api = await this.$browserApi;
 
       return api.setExtensionEnabled(extension.uuid, !enabled).then(() => {
         extension.busy = false;

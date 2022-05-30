@@ -1,22 +1,17 @@
 import constants from './constants'
-import browserMixin from './mixins/browser'
-import serverMixin from './mixins/server'
 import ExtensionsList from '../components/ExtensionsList'
 
 export default {
-    mixins: [browserMixin, serverMixin],
     components: {
         ExtensionsList
     },
 
     data() {
         return {
-            api: {
-                server: false,
-            },
             extensions: {
                 installed: {}
             },
+
         };
     },
 
@@ -47,7 +42,7 @@ export default {
             }
 
             if(!this.extensions.installed[uuid]) {
-                return this.api.browser.then(api => {
+                return this.$browserApi.then(api => {
                     return api.getExtensionInfo(uuid).then(extension => {
                         this.$set(this.extensions.installed, uuid, extension);
                         return this.onExtensionStateChange(uuid, state);
@@ -57,14 +52,26 @@ export default {
 
             this.extensions.installed[uuid].state = state;
         },
+
+        onShellRestart() {
+            console.log(arguments)
+        },
+
+        onShellSettingChanged() {
+            console.log(arguments)
+        },
     },
 
     created() {
-        return this.api.browser.then(api => {
+        this.$browserApi.then(api => {
+            this.$browserEvents.$on(constants.BROWSER_EVENT.CHANGE, this.onExtensionStateChange);
+            this.$browserEvents.$on(constants.BROWSER_EVENT.SHELL_RESTART, this.onShellRestart);
+            this.$browserEvents.$on(constants.BROWSER_EVENT.SHELL_SETTING_CHANGES, this.onShellSettingChanged);
+
             return api.listExtensions().then(installed => {
                 this.extensions.installed = installed;
 
-                return this.api.server.extensions({
+                return this.$serverApi.extensions({
                     params: {
                         uuid: Object.keys(this.extensions.installed)
                     }
@@ -81,7 +88,7 @@ export default {
 
                     if(!this.disableUpdates)
                     {
-                        return this.api.server.updates(request, api.shellVersion, api.versionValidationEnabled).then(({ data: results }) => {
+                        return this.$serverApi.updates(request, api.shellVersion, api.versionValidationEnabled).then(({ data: results }) => {
                             for (let [uuid, update] of Object.entries(results)) {
                                 this.$set(this.extensions.installed[uuid], 'update', update);
                             }

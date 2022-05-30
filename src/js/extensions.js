@@ -24,7 +24,7 @@ export default {
 
     methods: {
         getActiveExtensions(query) {
-            return this.api.server.extensions({ params:
+            return this.$serverApi.extensions({ params:
                 Object.assign({
                     status: constants.STATUS.ACTIVE,
                     page_size: INITIAL_PAGE_SIZE,
@@ -64,7 +64,7 @@ export default {
     },
 
     async mounted() {
-        this.api.server = await http;
+        this.$serverApi = await http;
 
         [
             {data: this.updated},

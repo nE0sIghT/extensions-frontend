@@ -1,7 +1,7 @@
 <template>
     <b-container b-fluid='md'>
         <extensions-list
-            v-if="browserApi"
+            v-if="$browserApi"
             :extensions="installedExtensions"
             show-controls
         ></extensions-list>

@@ -1,9 +1,6 @@
-import serverMixin from './mixins/server'
 import routes from '../router/navigation'
 
 export default {
-    mixins: [serverMixin],
-
     data() {
         return {
             backend_forms: {
@@ -54,7 +51,7 @@ export default {
 
     async mounted() {
         // TODO: catch errors when we got notifications
-        let { data: hello } = await this.api.server.hello();
+        let { data: hello } = await this.$serverApi.hello();
         this.user = hello.user;
         this.backend_forms = hello.forms;
     },

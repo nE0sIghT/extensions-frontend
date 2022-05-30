@@ -13,12 +13,9 @@
 </template>
 
 <script>
-import common from '../js/mixins/common'
-import browserMixin from '../js/mixins/browser'
 import ExtensionRow from './ExtensionRow'
 
 export default {
-    mixins: [common, browserMixin],
     components: {
       ExtensionRow,
     },

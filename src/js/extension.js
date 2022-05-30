@@ -1,10 +1,6 @@
-import browserMixin from './mixins/browser'
-import serverMixin from './mixins/server'
 import ExtensionRow from '../components/ExtensionRow'
 
 export default {
-    mixins: [browserMixin, serverMixin],
-
     components: {
       ExtensionRow,
     },
@@ -32,12 +28,12 @@ export default {
     },
 
     created() {
-        return this.api.server.extension(this.$route.params.uuid).then(({ data: extension }) => {
-            this.api.server.extensionVersions(extension.uuid).then(({ data: {results: versions} }) => {
+        return this.$serverApi.extension(this.$route.params.uuid).then(({ data: extension }) => {
+            this.$serverApi.extensionVersions(extension.uuid).then(({ data: {results: versions} }) => {
                 this.extension = extension;
                 this.extension.versions = versions;
 
-                return this.api.browser.then(api => {
+                return this.$browserApi.then(api => {
                     return api.getExtensionInfo(this.$route.params.uuid).then(extension => {
                         this.extension = Object.assign({}, extension, this.extension);
                     });

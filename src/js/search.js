@@ -1,8 +1,6 @@
-import serverMixin from './mixins/server'
 import ExtensionsList from '../components/ExtensionsList'
 
 export default {
-    mixins: [serverMixin],
     components: {
         ExtensionsList
     },
@@ -66,7 +64,7 @@ export default {
             ({ data: {
                 count: this.count,
                 results: this.extensions,
-            }} = await this.api.server.search(
+            }} = await this.$serverApi.search(
                 query,
                 page,
                 this.search.page_size,
