@@ -22,6 +22,7 @@ $extension-toggle-width: 54px;
 $extension-toggle-height: 32px;
 $extension-toggle-circle-width: 8px;
 $extension-toggle-color: #4a86cf;
+$extension-toggle-off-color: #bbb;
 
 .extension-toggle {
     .toggle {
@@ -30,7 +31,7 @@ $extension-toggle-color: #4a86cf;
         height: $extension-toggle-height;
         border-radius: calc($extension-toggle-height / 2);
         box-sizing: border-box;
-        border: 2px solid #ccc;
+        border: 2px solid $extension-toggle-off-color;
         position: relative;
         padding: 2px;
         transition: border-color .25s, background-color .25s;
@@ -41,7 +42,7 @@ $extension-toggle-color: #4a86cf;
             height: $extension-toggle-height - $extension-toggle-circle-width;
             border-radius: 50%;
             display: block;
-            background: #ccc;
+            background: $extension-toggle-off-color;
             transition: background-color .25s, background-color .25s, transform .25s;
         }
     
