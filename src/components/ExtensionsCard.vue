@@ -18,7 +18,7 @@
                 <b-card no-body class='p-2 justify-content-between'>
                   <div class='d-flex h-100'>
                     <b-card-img
-                      :src="extension.icon || '/images/plugin.png'"
+                      :src="getExtensionIcon(extension)"
                       class='mr-auto'
                       left
                       width='32px'
