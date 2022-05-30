@@ -3,17 +3,19 @@ import qs from "qs"
 
 import constants from '../constants'
 
-const EGO_URL = 'http://localhost:8000/api/v1';
 const defaultRequestParameters = {
     paramsSerializer: (params) => qs.stringify(params, { arrayFormat: "brackets" })
 }
 
-const client = axios.create({
-    baseURL: EGO_URL
+const config = axios.get(process.env.EGO_CONFIG_URL || '/config.json').then(response => response.data);
+const axiosClient = config.then((config) => {
+    return axios.create({
+        baseURL: new URL('/api/v1', config['api_url']).toString(),
+    })
 });
 
 function getRequest(url, config) {
-    return client.get(url, Object.assign({}, defaultRequestParameters, config));
+    return axiosClient.then(client => client.get(url, Object.assign({}, defaultRequestParameters, config)));
 }
 
 export default (function () {
@@ -41,14 +43,17 @@ export default (function () {
     search(query, page = 1, page_size = 25, ordering, recommended = false) {
         if(query && query != '-')
         {
-            return client.get(`/extensions/search/${query}/`, {
-                params: {
-                    page,
-                    page_size,
-                    ordering,
-                    recommended,
-                },
-            });
+            return axiosClient.then(client => client.get(
+              `/extensions/search/${query}/`,
+              {
+                  params: {
+                      page,
+                      page_size,
+                      ordering,
+                      recommended,
+                  },
+              }
+            ))
         }
         else
         {
@@ -64,11 +69,14 @@ export default (function () {
     },
 
     updates(extensions, shellVersion, versionValidationEnabled) {
-        return client.post('/extensions/updates/', {
+        return axiosClient.then(client => client.post(
+          '/extensions/updates/',
+          {
             installed: extensions,
             shell_version: shellVersion,
             version_validation_enabled: versionValidationEnabled,
-        });
+          }
+        ));
     },
   };
 })();
