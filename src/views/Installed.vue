@@ -5,9 +5,9 @@
             :extensions="installedExtensions"
             show-controls
         ></extensions-list>
-        <div v-else>
-            TODO: No plugin
-        </div>
+        <b-alert v-else show variant="warning">
+            Browser extension was not found.
+        </b-alert>
     </b-container>    
 </template>
 
