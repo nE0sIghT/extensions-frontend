@@ -1,5 +1,9 @@
 <template>
     <b-container b-fluid='md'>
+        <b-alert :show="browserError" variant="warning">
+          There were errors from browser extension:
+          {{ browserError}}
+        </b-alert>
         <extensions-list
             v-if="$browserApi"
             :extensions="installedExtensions"

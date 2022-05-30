@@ -8,6 +8,7 @@ export default {
 
     data() {
         return {
+            browserError: null,
             extensions: {
                 installed: {}
             },
@@ -96,6 +97,9 @@ export default {
                     }
                 });
             });
+        }).catch((error) => {
+          this.$browserApi = false;
+          this.browserError = error;
         });
     }
 };
