@@ -25,7 +25,7 @@
                       height='32px'></b-card-img>
 
                     <b-card-body class='flex-grow-1 pt-0'>
-                      <h6>{{ extension.name }}</h6>
+                      <h6><b-link :to="`/extension/${extension.uuid}`">{{ extension.name }}</b-link></h6>
                     </b-card-body>
                   </div>
                   <div class='d-flex flex-grow-0 text-center'>
