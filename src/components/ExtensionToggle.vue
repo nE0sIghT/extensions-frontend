@@ -24,18 +24,18 @@ $extension-toggle-circle-width: 8px;
 $extension-toggle-color: #4a86cf;
 
 .extension-toggle {
-    .toggle{
+    .toggle {
         cursor: pointer;
         width: $extension-toggle-width;
         height: $extension-toggle-height;
-        border-radius: $extension-toggle-height / 2;
+        border-radius: calc($extension-toggle-height / 2);
         box-sizing: border-box;
         border: 2px solid #ccc;
         position: relative;
         padding: 2px;
         transition: border-color .25s, background-color .25s;
     
-        &:before{
+        &:before {
             content: "";
             width: $extension-toggle-height - $extension-toggle-circle-width;
             height: $extension-toggle-height - $extension-toggle-circle-width;
@@ -45,12 +45,14 @@ $extension-toggle-color: #4a86cf;
             transition: background-color .25s, background-color .25s, transform .25s;
         }
     
-        &.on{
-            border-color: $extension-toggle-color;;
+        &.on {
+            border-color: $extension-toggle-color;
             background-color: $extension-toggle-color;
-            &:before{
+            width: $extension-toggle-width;
+            height: $extension-toggle-height;
+            &:before {
                 background: #fff;
-                transform: translateX(($extension-toggle-width - $extension-toggle-circle-width) / 2)
+                transform: translateX(calc(($extension-toggle-width - $extension-toggle-circle-width) / 2))
             }
         }
     }
