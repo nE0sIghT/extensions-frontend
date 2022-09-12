@@ -64,13 +64,13 @@ export default {
             ({ data: {
                 count: this.count,
                 results: this.extensions,
-            }} = await this.$serverApi.search(
+            }} = await this.$serverApi.v1ExtensionsSearchRetrieve({
                 query,
+                ordering: this.ordering,
                 page,
-                this.search.page_size,
-                this.ordering,
-                this.search.recommended
-            ));
+                page_size: this.search.page_size,
+                recommended: this.search.recommended
+            }));
             this.busy = false;
         },
 

@@ -28,8 +28,8 @@ export default {
     },
 
     created() {
-        return this.$serverApi.extension(this.$route.params.uuid).then(({ data: extension }) => {
-            this.$serverApi.extensionVersions(extension.uuid).then(({ data: {results: versions} }) => {
+        return this.$serverApiFp.v1ExtensionsRetrieve(this.$route.params.uuid).then(({ data: extension }) => {
+            this.$serverApiFp.v1ExtensionsVersionsList(extension.uuid).then(({ data: {results: versions} }) => {
                 this.extension = extension;
                 this.extension.versions = versions;
 

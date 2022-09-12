@@ -1,5 +1,4 @@
 import constants from './constants'
-import http from './api/server'
 import ExtensionsCard from '../components/ExtensionsCard'
 import ExtensionsCarousel from '../components/ExtensionsCarousel'
 
@@ -24,12 +23,13 @@ export default {
 
     methods: {
         getActiveExtensions(query) {
-            return this.$serverApi.extensions({ params:
-                Object.assign({
+            return this.$serverApi.v1ExtensionsList(Object.assign(
+                {
                     status: constants.STATUS.ACTIVE,
                     page_size: INITIAL_PAGE_SIZE,
-                }, query)
-            });
+                },
+                query
+            ));
         },
 
         getUpdatedExtensions() {
@@ -64,8 +64,6 @@ export default {
     },
 
     async mounted() {
-        this.$serverApi = await http;
-
         [
             {data: this.updated},
             {data: this.popular},

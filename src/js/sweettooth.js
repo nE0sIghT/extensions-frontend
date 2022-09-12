@@ -1,16 +1,21 @@
+import Vue from 'vue'
 import routes from '../router/navigation'
+import constants from './constants';
 
-export default {
+export default Vue.extend({
     data() {
         return {
-            backend_forms: {
-
-            },
             userMenu: {},
             messages: {},
             search: "",
             unreviewed_extensions: 0,
-            user: {}
+            user: {},
+            login: {
+                username: '',
+                password: '',
+                error: '',
+                remember: false,
+            },
         };
     },
 
@@ -34,7 +39,33 @@ export default {
         },
 
         onLogin() {
+            this.login.error = '';
+            this.$serverApiFp.v1AccountsLoginCreate({
+                'login': this.login.username,
+                'password': this.login.password,
+            }).then(data => {
+                this.setToken(data.data.token, this.login.remember);
+                this.$refs.userDropdownMenu.hide(true);
+            }).catch(error => {
+                console.log(error);
+                this.login.error = error?.response?.data?.detail;
+            });
+        },
 
+        onLogout() {
+            this.$serverApiFp.v1AccountsLogoutCreate({ 'revoke_token': true }).finally(() => {
+                this.removeToken();
+                this.user = {};
+            })
+        },
+
+        hideUserDropdownMenu() {
+            this.$refs.userDropdownMenu.hide(true);
+        },
+
+        async sayHello() {
+            let { data: hello } = await this.$serverApi.v1HelloRetrieve();
+            this.user = hello.user;
         },
 
         onSearch(event) {
@@ -50,9 +81,7 @@ export default {
     },
 
     async mounted() {
-        // TODO: catch errors when we got notifications
-        let { data: hello } = await this.$serverApi.hello();
-        this.user = hello.user;
-        this.backend_forms = hello.forms;
+        this.$sweettoothEvents.$on(constants.TOKEN_SET_EVENT, this.sayHello);
+        this.sayHello();
     },
-};
+});

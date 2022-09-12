@@ -11,6 +11,11 @@ module.exports = {
       enableInSFC: false
     }
   },
+  configureWebpack: {
+    experiments: {
+        topLevelAwait: true,
+    }
+  },
   pwa: {
     manifestOptions: {
       icons: [

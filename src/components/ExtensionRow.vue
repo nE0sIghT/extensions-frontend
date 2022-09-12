@@ -24,7 +24,7 @@
         </h5>
         <div class="status-icons">
           <b-icon
-            v-if="isSystem(extension)"
+            v-if="isSystemExtension(extension)"
             v-b-popover.hover="$t('This extension is installed systemwide')"
             icon="lock-fill"
             :class="getIconClasses('bg-primary')"
@@ -40,7 +40,7 @@
             aria-hidden="true"
           ></b-icon>
           <b-icon
-            v-if="haveError(extension)"
+            v-if="isExtensionStateError(extension)"
             v-b-popover.hover="
               `${$t('Extension error occured:')} ${extension.error}`
             "
@@ -52,7 +52,7 @@
         </div>
         <div v-if="controlsAvailable(extension)" class="controls">
           <extension-toggle
-            :checked="isEnabled(extension)"
+            :checked="isExtensionEnabled(extension)"
             @click="toggle(extension)"
           ></extension-toggle>
           <b-icon
@@ -177,21 +177,21 @@ export default {
 
     getDeleteIconClasses(extension) {
       return this.getIconClasses("bg-danger", {
-        disabled: this.isSystem(extension),
+        disabled: this.isSystemExtension(extension),
       });
     },
 
     getToggleIcon(extension) {
-      return (this.isEnabled(extension) && "toggle-on") || "toggle-off";
+      return (this.isExtensionEnabled(extension) && "toggle-on") || "toggle-off";
     },
 
     getToggleVariant(extension) {
-      return (this.isEnabled(extension) && "success") || "secondary";
+      return (this.isExtensionEnabled(extension) && "success") || "secondary";
     },
 
     getUninstallPopover(extension) {
       return (
-        (this.isSystem(extension) &&
+        (this.isSystemExtension(extension) &&
           this.$t("Systemwide extensions can not be uninstalled here")) ||
         this.$t("Uninstall")
       );
@@ -237,7 +237,7 @@ export default {
       }
 
       extension.busy = true;
-      let enabled = this.isEnabled(extension);
+      let enabled = this.isExtensionEnabled(extension);
       let api = await this.$browserApi;
 
       return api.setExtensionEnabled(extension.uuid, !enabled).then(() => {

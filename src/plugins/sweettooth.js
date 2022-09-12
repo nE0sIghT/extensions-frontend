@@ -1,6 +1,6 @@
 /* global SweetTooth */
 import constants from '../js/constants'
-import http from '../js/api/server'
+import client from '../js/api/extensions-web-client'
 import require from '../js/require-compat'
 import Vue from 'vue';
 
@@ -47,11 +47,33 @@ function parseGNOMEVersion(value) {
     return parseInt(value);
 }
 
+function isDisabled(extension) {
+    return extension.state == constants.ExtensionState.DISABLED;
+}
+
+function versionCompare(a, b) {
+    a = a.split(".").map(parseGNOMEVersion);
+    b = b.split(".").map(parseGNOMEVersion);
+
+    for(let i = 0; i < Math.max(a.length, b.length); i++) {
+        if(typeof(a[i]) == 'undefined' || typeof(b[i]) == 'undefined')
+        {
+            return typeof(a[i]) == 'undefined' && -1 || 1;
+        }
+        else if(a[i] !== b[i]) {
+            return a[i] - b[i];
+        }
+    }
+
+    return 0;
+}
+
 export default {
     install(app) {
         app.prototype.$browserApi = API;
-        app.prototype.$serverApi = http;
-        app.prototype.$browserEvents = EVENT_BUS;
+        app.prototype.$serverApi = client.api;
+        app.prototype.$serverApiFp = client.apiFp;
+        app.prototype.$sweettoothEvents = EVENT_BUS;
 
         app.mixin({
             data() {
@@ -62,48 +84,59 @@ export default {
             },
 
             methods: {
+                setToken(token, remember = false) {
+                    let storage = remember && localStorage || sessionStorage;
+                    storage.setItem('token', token.token);
+                    storage.setItem('tokenExpiry', token.expiry);
+                    client.setToken(token.token);
+                    this.$sweettoothEvents.$emit(constants.TOKEN_SET_EVENT);
+                },
+
+                restoreToken() {
+                    let now = new Date();
+                    for (let storage of [localStorage, sessionStorage]) {
+                        let token = storage.getItem('token');
+                        let expiry = storage.getItem('tokenExpiry');
+                        if (token && expiry && now < new Date(expiry)) {
+                            client.setToken(token);
+                            break;
+                        }
+                    }
+                },
+
+                removeToken() {
+                    for (let storage of [localStorage, sessionStorage]) {
+                        storage.removeItem('token');
+                        storage.removeItem('tokenExpiry');
+                    }
+                    client.setToken(null);
+                },
+
+                getValidationState({ dirty, validated, valid = null }) {
+                    return dirty || validated ? valid : null;
+                },
+
                 getExtensionIcon(extension) {
                     return extension.icon || '/images/plugin.png';
                 },
 
-                versionCompare(a, b) {
-                    a = a.split(".").map(parseGNOMEVersion);
-                    b = b.split(".").map(parseGNOMEVersion);
-
-                    for(let i = 0; i < Math.max(a.length, b.length); i++) {
-                        if(typeof(a[i]) == 'undefined' || typeof(b[i]) == 'undefined')
-                        {
-                            return typeof(a[i]) == 'undefined' && -1 || 1;
-                        }
-                        else if(a[i] !== b[i]) {
-                            return a[i] - b[i];
-                        }
-                    }
-
-                    return 0;
-                },
-
-                isEnabled(extension) {
+                isExtensionEnabled(extension) {
                     return extension.state == constants.ExtensionState.ENABLED;
                 },
 
-                isDisabled(extension) {
-                    return extension.state == constants.ExtensionState.DISABLED;
-                },
-
-                isSystem(extension) {
-                    return extension.type == constants.ExtensionType.SYSTEM;
-                },
-
-                haveError(extension) {
+                isExtensionStateError(extension) {
                     return extension.state == constants.ExtensionState.ERROR;
+                },
+
+                isSystemExtension(extension) {
+                    return extension.type == constants.ExtensionType.SYSTEM;
                 },
 
                 async installExtension(extension) {
                     let api = await this.$browserApi;
                     let update = extension.state && extension.state != constants.ExtensionState.UNINSTALLED;
                     let system = extension.type == constants.ExtensionType.SYSTEM;
-                    let disabled = this.isDisabled(extension);
+                    let disabled = isDisabled(extension);
 
                     if(!system && update)
                     {
@@ -147,7 +180,7 @@ export default {
                 },
 
                 async uninstallExtension(extension) {
-                    if(this.isSystem(extension))
+                    if(this.isSystemExtension(extension))
                     {
                         return;
                     }
@@ -166,13 +199,13 @@ export default {
             },
 
             created() {
+                this.restoreToken();
                 this.$browserApi.then((api) => {
-                    this.disableUpdates = this.versionCompare(api.shellVersion, '3.36') >= 0;
+                    this.disableUpdates = versionCompare(api.shellVersion, '3.36') >= 0;
                     this.integrationReady = true;
 
                     return api;
                 }).catch((error) => {
-                    console.log(error);
                     return Promise.reject(error);
                 });
             }

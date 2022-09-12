@@ -65,18 +65,14 @@ export default {
 
     created() {
         this.$browserApi.then(api => {
-            this.$browserEvents.$on(constants.BROWSER_EVENT.CHANGE, this.onExtensionStateChange);
-            this.$browserEvents.$on(constants.BROWSER_EVENT.SHELL_RESTART, this.onShellRestart);
-            this.$browserEvents.$on(constants.BROWSER_EVENT.SHELL_SETTING_CHANGES, this.onShellSettingChanged);
+            this.$sweettoothEvents.$on(constants.BROWSER_EVENT.CHANGE, this.onExtensionStateChange);
+            this.$sweettoothEvents.$on(constants.BROWSER_EVENT.SHELL_RESTART, this.onShellRestart);
+            this.$sweettoothEvents.$on(constants.BROWSER_EVENT.SHELL_SETTING_CHANGES, this.onShellSettingChanged);
 
             return api.listExtensions().then(installed => {
                 this.extensions.installed = installed;
 
-                return this.$serverApi.extensions({
-                    params: {
-                        uuid: Object.keys(this.extensions.installed)
-                    }
-                }).then(({ data: { results } }) => {
+                return this.$serverApiFp.v1ExtensionsList(Object.keys(this.extensions.installed)).then(({ data: { results } }) => {
                     let request = {};
                     results.forEach(extension => {
                         this.extensions.installed[extension.uuid] = Object.assign({}, this.extensions.installed[extension.uuid], extension);
@@ -89,7 +85,11 @@ export default {
 
                     if(!this.disableUpdates)
                     {
-                        return this.$serverApi.updates(request, api.shellVersion, api.versionValidationEnabled).then(({ data: results }) => {
+                        return this.$serverApiFp.v1ExtensionsUpdatesCreate({
+                            installed: request,
+                            shell_version: api.shellVersion,
+                            version_validation_enabled: api.versionValidationEnabled
+                        }).then(({ data: results }) => {
                             for (let [uuid, update] of Object.entries(results)) {
                                 this.$set(this.extensions.installed[uuid], 'update', update);
                             }

@@ -50,20 +50,44 @@
                         <div v-if="user.is_authenticated" class="row">
                             <b-dropdown-item :href="`/profile/${user.id}`">{{ $t('User Profile') }}</b-dropdown-item>
                             <b-dropdown-item href="/settings">{{ $t('User Settings') }}</b-dropdown-item>
-                            <b-dropdown-item href="/logout">{{ $t('Log out') }}</b-dropdown-item>
+                            <b-dropdown-item @click="onLogout">{{ $t('Log out') }}</b-dropdown-item>
                         </div>
                         <b-dropdown-form v-else class='login_popup_form px-0'>
-                            <span v-html="backend_forms.login_popup_form"></span>
-                            <b-form-group>
-                                <b-button variant="primary" block @click.stop="onLogin">{{ $t('Log in') }}</b-button>
-                            </b-form-group>
-                            <b-form-group>
-                                <router-link to="/reset-password">{{ $t('Forgot your password?') }}</router-link>
-                            </b-form-group>
+                            <b-form @submit.prevent="onLogin">
+                                <b-form-group label="Username" label-for="username" label-class="font-weight-bold">
+                                    <b-form-input
+                                        v-model="login.username"
+                                        type="text"
+                                        placeholder="Enter username"
+                                        required
+                                    ></b-form-input>
+                                </b-form-group>
+
+                                <b-form-group label="Password" label-for="password" label-class="font-weight-bold">
+                                    <b-form-input
+                                        v-model="login.password"
+                                        type='password'
+                                        placeholder="Enter password"
+                                        required
+                                    ></b-form-input>
+                                </b-form-group>
+                                <b-form-group>
+                                    <b-form-checkbox v-model="login.remember" :value="true" :unchecked-value="false">
+                                        Remember me
+                                    </b-form-checkbox>
+                                </b-form-group>
+                                <b-form-group>
+                                    <b-button variant="primary" type="submit" block>{{ $t('Log in') }}</b-button>
+                                </b-form-group>
+                                <b-alert :show="!!login.error" variant="danger">{{ login.error }}</b-alert>
+                                <b-form-group>
+                                    <router-link to="/reset-password" @click.native='hideUserDropdownMenu'>{{ $t('Forgot your password?') }}</router-link>
+                                </b-form-group>
+                            </b-form>
                             <b-dropdown-divider></b-dropdown-divider>
                             <p>{{ $t("Don't have an account?") }}</p>
                             <b-form-group>
-                                <b-button to="/register" variant="success" block>{{ $t('Register') }}</b-button>
+                                <b-button to="/register" variant="success" @click='hideUserDropdownMenu' block>{{ $t('Register') }}</b-button>
                             </b-form-group>
                         </b-dropdown-form>
                     </b-nav-item-dropdown>

@@ -30,6 +30,8 @@ export default (() => {
             CHANGE: 'browser-event-change',
             SHELL_RESTART: 'browser-event-shell-restart',
             SHELL_SETTING_CHANGES: 'browser-event-setting-changed',
-        }
+        },
+
+        TOKEN_SET_EVENT: 'token-set',
     };
 })();
