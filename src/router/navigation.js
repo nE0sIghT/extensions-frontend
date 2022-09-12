@@ -12,6 +12,16 @@ export default (() => [
       showInMenu: true,
     },
     {
+      path: '/register',
+      name: 'Register',
+      component: () => import('../views/Register.vue'),
+    },
+    {
+      path: '/verify-user',
+      name: 'Verify user',
+      component: () => import('../views/VerifyUser.vue'),
+    },
+    {
       path: '/search/:query?/:page?',
       name: 'Search extensions',
       component: () => import('../views/Search.vue'),
