@@ -1552,14 +1552,14 @@ export const V1ApiAxiosParamCreator = function (configuration?: Configuration) {
         /**
          * 
          * @param {string} query 
+         * @param {boolean} [recommended] 
+         * @param {'-created' | '-downloads' | '-popularity' | '-updated' | 'created' | 'downloads' | 'popularity' | 'updated'} [ordering] 
          * @param {number} [page] 
          * @param {number} [pageSize] 
-         * @param {boolean} [recommended] 
-         * @param {'asc' | 'desc'} [ordering] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        v1ExtensionsSearchRetrieve: async (query: string, page?: number, pageSize?: number, recommended?: boolean, ordering?: 'asc' | 'desc', options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+        v1ExtensionsSearchRetrieve: async (query: string, recommended?: boolean, ordering?: '-created' | '-downloads' | '-popularity' | '-updated' | 'created' | 'downloads' | 'popularity' | 'updated', page?: number, pageSize?: number, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'query' is not null or undefined
             assertParamExists('v1ExtensionsSearchRetrieve', 'query', query)
             const localVarPath = `/api/v1/extensions/search/{query}/`
@@ -1578,20 +1578,20 @@ export const V1ApiAxiosParamCreator = function (configuration?: Configuration) {
             // authentication tokenAuth required
             await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
 
-            if (page !== undefined) {
-                localVarQueryParameter['page'] = page;
-            }
-
-            if (pageSize !== undefined) {
-                localVarQueryParameter['page_size'] = pageSize;
-            }
-
             if (recommended !== undefined) {
                 localVarQueryParameter['recommended'] = recommended;
             }
 
             if (ordering !== undefined) {
                 localVarQueryParameter['ordering'] = ordering;
+            }
+
+            if (page !== undefined) {
+                localVarQueryParameter['page'] = page;
+            }
+
+            if (pageSize !== undefined) {
+                localVarQueryParameter['page_size'] = pageSize;
             }
 
 
@@ -1987,15 +1987,15 @@ export const V1ApiFp = function(configuration?: Configuration) {
         /**
          * 
          * @param {string} query 
+         * @param {boolean} [recommended] 
+         * @param {'-created' | '-downloads' | '-popularity' | '-updated' | 'created' | 'downloads' | 'popularity' | 'updated'} [ordering] 
          * @param {number} [page] 
          * @param {number} [pageSize] 
-         * @param {boolean} [recommended] 
-         * @param {'asc' | 'desc'} [ordering] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async v1ExtensionsSearchRetrieve(query: string, page?: number, pageSize?: number, recommended?: boolean, ordering?: 'asc' | 'desc', options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Extension>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.v1ExtensionsSearchRetrieve(query, page, pageSize, recommended, ordering, options);
+        async v1ExtensionsSearchRetrieve(query: string, recommended?: boolean, ordering?: '-created' | '-downloads' | '-popularity' | '-updated' | 'created' | 'downloads' | 'popularity' | 'updated', page?: number, pageSize?: number, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Extension>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.v1ExtensionsSearchRetrieve(query, recommended, ordering, page, pageSize, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -2216,15 +2216,15 @@ export const V1ApiFactory = function (configuration?: Configuration, basePath?: 
         /**
          * 
          * @param {string} query 
+         * @param {boolean} [recommended] 
+         * @param {'-created' | '-downloads' | '-popularity' | '-updated' | 'created' | 'downloads' | 'popularity' | 'updated'} [ordering] 
          * @param {number} [page] 
          * @param {number} [pageSize] 
-         * @param {boolean} [recommended] 
-         * @param {'asc' | 'desc'} [ordering] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        v1ExtensionsSearchRetrieve(query: string, page?: number, pageSize?: number, recommended?: boolean, ordering?: 'asc' | 'desc', options?: any): AxiosPromise<Extension> {
-            return localVarFp.v1ExtensionsSearchRetrieve(query, page, pageSize, recommended, ordering, options).then((request) => request(axios, basePath));
+        v1ExtensionsSearchRetrieve(query: string, recommended?: boolean, ordering?: '-created' | '-downloads' | '-popularity' | '-updated' | 'created' | 'downloads' | 'popularity' | 'updated', page?: number, pageSize?: number, options?: any): AxiosPromise<Extension> {
+            return localVarFp.v1ExtensionsSearchRetrieve(query, recommended, ordering, page, pageSize, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -2559,6 +2559,20 @@ export interface V1ApiV1ExtensionsSearchRetrieveRequest {
 
     /**
      * 
+     * @type {boolean}
+     * @memberof V1ApiV1ExtensionsSearchRetrieve
+     */
+    readonly recommended?: boolean
+
+    /**
+     * 
+     * @type {'-created' | '-downloads' | '-popularity' | '-updated' | 'created' | 'downloads' | 'popularity' | 'updated'}
+     * @memberof V1ApiV1ExtensionsSearchRetrieve
+     */
+    readonly ordering?: '-created' | '-downloads' | '-popularity' | '-updated' | 'created' | 'downloads' | 'popularity' | 'updated'
+
+    /**
+     * 
      * @type {number}
      * @memberof V1ApiV1ExtensionsSearchRetrieve
      */
@@ -2570,20 +2584,6 @@ export interface V1ApiV1ExtensionsSearchRetrieveRequest {
      * @memberof V1ApiV1ExtensionsSearchRetrieve
      */
     readonly pageSize?: number
-
-    /**
-     * 
-     * @type {boolean}
-     * @memberof V1ApiV1ExtensionsSearchRetrieve
-     */
-    readonly recommended?: boolean
-
-    /**
-     * 
-     * @type {'asc' | 'desc'}
-     * @memberof V1ApiV1ExtensionsSearchRetrieve
-     */
-    readonly ordering?: 'asc' | 'desc'
 }
 
 /**
@@ -2867,7 +2867,7 @@ export class V1Api extends BaseAPI {
      * @memberof V1Api
      */
     public v1ExtensionsSearchRetrieve(requestParameters: V1ApiV1ExtensionsSearchRetrieveRequest, options?: AxiosRequestConfig) {
-        return V1ApiFp(this.configuration).v1ExtensionsSearchRetrieve(requestParameters.query, requestParameters.page, requestParameters.pageSize, requestParameters.recommended, requestParameters.ordering, options).then((request) => request(this.axios, this.basePath));
+        return V1ApiFp(this.configuration).v1ExtensionsSearchRetrieve(requestParameters.query, requestParameters.recommended, requestParameters.ordering, requestParameters.page, requestParameters.pageSize, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**

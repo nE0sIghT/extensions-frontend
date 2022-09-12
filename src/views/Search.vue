@@ -78,6 +78,7 @@
 </template>
 
 <script>
+import constants from '@/js/constants';
 import ExtensionsList from '../components/ExtensionsList'
 
 export default {
@@ -118,7 +119,7 @@ export default {
                 return `${this.search.direction == 'desc' && '-' || ''}${this.search.ordering}`;
             }
 
-            return null;
+            return "";
         },
 
         page() {
@@ -143,15 +144,18 @@ export default {
         async searchExtensions(query, page) {
             this.busy = true;
             this.extensions = [];
+
+            let apiMethod = (query && query != '-') && this.$serverApi.v1ExtensionsSearchRetrieve || this.$serverApi.v1ExtensionsList;
             ({ data: {
                 count: this.count,
                 results: this.extensions,
-            }} = await this.$serverApi.v1ExtensionsSearchRetrieve({
+            }} = await apiMethod.call(this.$serverApi, {
                 query,
+                recommended: this.search.recommended,
+                status: constants.STATUS.ACTIVE,
                 ordering: this.ordering,
                 page,
                 page_size: this.search.page_size,
-                recommended: this.search.recommended
             }));
             this.busy = false;
         },
