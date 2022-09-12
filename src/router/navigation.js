@@ -22,6 +22,11 @@ export default (() => [
       component: () => import('../views/VerifyUser.vue'),
     },
     {
+      path: '/reset-password',
+      name: 'Reset password',
+      component: () => import('../views/ResetPassword.vue'),
+    },
+    {
       path: '/search/:query?/:page?',
       name: 'Search extensions',
       component: () => import('../views/Search.vue'),
