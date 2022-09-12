@@ -33,7 +33,7 @@
 </template>
 
 <script>
-import constants from './constants'
+import constants from '../js/constants'
 import ExtensionsCard from '../components/ExtensionsCard'
 import ExtensionsCarousel from '../components/ExtensionsCarousel'
 

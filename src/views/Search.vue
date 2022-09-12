@@ -117,6 +117,8 @@ export default {
             {
                 return `${this.search.direction == 'desc' && '-' || ''}${this.search.ordering}`;
             }
+
+            return null;
         },
 
         page() {

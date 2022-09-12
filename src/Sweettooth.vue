@@ -180,8 +180,8 @@
 
 <script>
 import Vue from 'vue'
-import routes from '../router/navigation'
-import constants from './constants';
+import routes from './router/navigation'
+import constants from './js/constants';
 
 export default Vue.extend({
     data() {

@@ -16,7 +16,7 @@
 </template>
 
 <script>
-import constants from './constants'
+import constants from '../js/constants'
 import ExtensionsList from '../components/ExtensionsList'
 
 export default {
