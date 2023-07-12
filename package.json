@@ -31,7 +31,7 @@
   "devDependencies": {
     "@babel/core": "^7.12.16",
     "@babel/eslint-parser": "^7.12.16",
-    "@openapitools/openapi-generator-cli": "^2.5.1",
+    "@openapitools/openapi-generator-cli": "^2.6.0",
     "@types/chai": "^4.2.15",
     "@types/mocha": "^8.2.1",
     "@types/vue-moment": "^4.0.3",
